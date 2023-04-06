@@ -1,9 +1,11 @@
 package tui
 
 import (
-    "fmt"
+    //tea "github.com/charmbracelet/bubbletea"
 )
 
-func testingModel() {
-    fmt.Println("Testing model")
+type terminalUIModel struct { 
+    choices []string
+    cursor int
+    selected map[int]struct{}
 }

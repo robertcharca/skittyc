@@ -1,9 +1,16 @@
 package tui
 
 import (
-    "fmt"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
-func testingInitial() {
-    fmt.Println("Testing initial")
+func initialModel() terminalUIModel {
+    return terminalUIModel{
+        choices: []string{"Change your font", "Change your color scheme"},
+        selected: make(map[int]struct{}),
+    }
+}
+
+func (tuim terminalUIModel) Init() tea.Cmd {
+    return nil
 }
