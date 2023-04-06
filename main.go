@@ -1,9 +1,9 @@
 package main
 
 import (
-    "fmt"
+    "github.com/robertcharca/simple-kitty-customizer/tui"
 )
 
 func main() {
-    fmt.Println("Hello kitty terminal!")
+    tui.Execute()
 }
