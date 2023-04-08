@@ -1,9 +1,8 @@
 package main
 
-import (
-    "github.com/robertcharca/simple-kitty-customizer/tui"
-)
+import "github.com/robertcharca/skittyc/cmd"
 
+//main(): principal function to execute all the CLI appication.
 func main() {
-    tui.Execute()
+	cmd.Execute()	
 }
