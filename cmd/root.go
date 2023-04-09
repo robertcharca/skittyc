@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//Variables that stores every command in the CLI.
+//Variables that stores the root command in the CLI.
 var rootCmd = &cobra.Command{
 	Use: "skittyc",
 	Short: "Introduction for a Kitty customizer",
@@ -29,7 +29,7 @@ func Execute() {
 
 //init(): works for initializing commands or flags (of any kind).
 func init() {	
-	//AddCommand(): function for adding principal subcommands for skittyc.
+	//AddCommand(): method for adding principal subcommands for skittyc.
 	rootCmd.AddCommand(customize.CustomizeCmd)
 	rootCmd.AddCommand(setup.SetupCmd)
 
