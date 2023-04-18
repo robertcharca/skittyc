@@ -6,11 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	//Global flags for the "customize" command.
-	setting bool	
-)
-
 var CustomizeCmd = &cobra.Command{
 	Use: "customize",
 	Short: "Welcome to 'customize'.",
@@ -21,8 +16,5 @@ var CustomizeCmd = &cobra.Command{
 }
 
 func init() {
-	//PersistentFlags(): global flags for your command.
-	CustomizeCmd.PersistentFlags().BoolVarP(&setting, "set", "s", false, "Setting a configuration")	
-	
-	CustomizeCmd.MarkPersistentFlagRequired("set")
+	//	
 }

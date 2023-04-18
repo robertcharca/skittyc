@@ -8,8 +8,7 @@ import (
 
 var (
 	//Local flags
-	customFonts bool
-	defaultFonts bool
+	setting string	
 )
 
 var fontCmd = &cobra.Command{
@@ -18,6 +17,15 @@ var fontCmd = &cobra.Command{
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("'fonts' working")
+		
+		if setting == "default" {
+			fmt.Println("Default fonts")
+		} else if setting == "customized" {
+			fmt.Println("Customized fonts")
+		} else {
+			fmt.Println("Error")
+		}
+
 	},
 }
 
@@ -25,11 +33,11 @@ func init() {
 	//Adding the command `fonts` to `customize`.
 	CustomizeCmd.AddCommand(fontCmd)
 	
-	//These flags are for setting a default or custom configuration in `fonts`.
-	fontCmd.Flags().BoolVarP(&customFonts, "custom", "c", false, "Custom setting")
-	fontCmd.Flags().BoolVarP(&defaultFonts, "default", "d", false, "Default setting")
-
-	//XOR flag execution.
-	fontCmd.MarkFlagsMutuallyExclusive("custom", "default")
-	
+	//Flags
+	/*
+		An argument is called using the flag variable and setting your command variable
+		with the "Flags()" method. 
+	*/
+	fontCmd.Flags().StringVarP(&setting, "set", "s", "", "Setting font configuration.")
+	fontCmd.MarkFlagRequired("set")
 }

@@ -5,7 +5,8 @@ import (
 	"os"
 
 	"github.com/robertcharca/skittyc/cmd/customize"
-	"github.com/robertcharca/skittyc/cmd/setup"
+	"github.com/robertcharca/skittyc/kittyc"
+	"github.com/robertcharca/skittyc/cmd/setup"	
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,7 @@ var rootCmd = &cobra.Command{
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Testing 'skittyc'")
+		kittyc.CreateKittyConf()
 	},
 }
 
