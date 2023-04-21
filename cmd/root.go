@@ -16,7 +16,7 @@ var rootCmd = &cobra.Command{
 	Short: "Introduction for a Kitty customizer",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Testing 'skittyc'")
+		fmt.Println("Welcome to skitty")
 		kittyc.CreateKittyConf()
 	},
 }

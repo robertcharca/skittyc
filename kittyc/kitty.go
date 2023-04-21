@@ -6,10 +6,12 @@ import (
 	"os"
 )
 
+var homePath, errHomePath = os.UserHomeDir()
+
+var path string = homePath + "/.config/kitty/kitty.conf" 
+
 func kittyConfigExistence() (error, bool) {
 	//Checking if $HOME variable is set 
-	homePath, errHomePath := os.UserHomeDir()
-	
 	if errHomePath != nil {
 		return errHomePath, false
 	}
@@ -19,8 +21,6 @@ func kittyConfigExistence() (error, bool) {
 		os.Stat() only recognizes a path that doesn't have any type of variable,
 		like $HOME, $PATH and similar types.
 	*/
-	var path string = homePath + "/.config/kitty/kitty.conf" 
-
 	_, err := os.Stat(path) 
 
 	//Checking if the file 'kitty.conf' does exist.
@@ -36,9 +36,12 @@ func CreateKittyConf(){
 	fmt.Println("Verifying if there's a 'kitty.conf' file created...")
 
 	_, kittyConfExistence := kittyConfigExistence()	
+
+	//kitty.conf file path
+	var kittyConfPath string = path
 	
 	if kittyConfExistence == false {
-		file, err := os.Create("kitty.conf")	
+		file, err := os.Create(kittyConfPath)	
 
 		//Handling errors when it's creating a 'kitty.conf' file.
 		if err != nil {
@@ -47,17 +50,12 @@ func CreateKittyConf(){
 		}
 
 		defer file.Close()
+		fmt.Println("kitty.conf has been created!")
 	} else {
 		fmt.Println("Ops! There's a file created")
 	}
 }
 
-func Kitty() {
-	// - Create a function to create kitty.conf file. -checked
-	// - Verify if kitty.conf file exists for creating automatically. -checked
-	// - Create a function for writing and verifying if a config line exists.
-	// - Watch how you can structure kitty configuration files through functions or structs.
-	// Idea: verify if it's possible to add a flag that contains an argument like --set=default
+func Kitty() {	
 	fmt.Println("I'm working")
-
 }
