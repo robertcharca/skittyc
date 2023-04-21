@@ -16,6 +16,5 @@ var CustomizeCmd = &cobra.Command{
 }
 
 func init() {
-	//Functionality for the 'customize' command.
-	
+	//	
 }

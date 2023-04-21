@@ -5,17 +5,19 @@ import (
 	"os"
 
 	"github.com/robertcharca/skittyc/cmd/customize"
-	"github.com/robertcharca/skittyc/cmd/setup"
+	"github.com/robertcharca/skittyc/kittyc"
+	"github.com/robertcharca/skittyc/cmd/setup"	
 	"github.com/spf13/cobra"
 )
 
-//Variables that stores every command in the CLI.
+//Variables that stores the root command in the CLI.
 var rootCmd = &cobra.Command{
 	Use: "skittyc",
 	Short: "Introduction for a Kitty customizer",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Testing 'skittyc'")
+		fmt.Println("Welcome to skitty")
+		kittyc.CreateKittyConf()
 	},
 }
 
@@ -29,7 +31,7 @@ func Execute() {
 
 //init(): works for initializing commands or flags (of any kind).
 func init() {	
-	//AddCommand(): function for adding principal subcommands for skittyc.
+	//AddCommand(): method for adding principal subcommands for skittyc.
 	rootCmd.AddCommand(customize.CustomizeCmd)
 	rootCmd.AddCommand(setup.SetupCmd)
 
