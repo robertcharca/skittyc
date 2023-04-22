@@ -1,5 +1,12 @@
 package kittyc
 
+import (
+	"fmt"
+	"os"
+)
+
+var fileStructureTitle = []string{"# Fonts", "# Background", "# Foreground", "# Color"}
+
 type ThemesInformation struct {
 	project string
 	name string
@@ -11,20 +18,30 @@ type ThemesInformation struct {
 type Background struct {
 	background string
 	foreground string
-	selection_background string
-	selection_foreground string
+	selectionBackground string
+	selectionForeground string
 }
 
 type Color struct {
-	colorn string
+	colorn map[string]string 
 }
 
-type KittyConfStructure struct {
-	author ThemesInformation
-	
-	background Background
+type Font struct {
+	font_family string
+	bold_font string
+	italic_font string
+	font_size float32
 
-	color Color
 }
 
+func displayStructure (file *os.File) {
+	for _, values := range fileStructureTitle {
+		_, err := fmt.Fprintf(file, "%s \n\n", values) 
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return 
+		}
+	}
+}
 

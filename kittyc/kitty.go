@@ -2,7 +2,7 @@ package kittyc
 
 import (
 	"errors"
-	"fmt"
+	"fmt"	
 	"os"
 )
 
@@ -10,7 +10,7 @@ var homePath, errHomePath = os.UserHomeDir()
 
 var path string = homePath + "/.config/kitty/kitty.conf" 
 
-func kittyConfigExistence() (error, bool) {
+func KittyConfigExistence() (error, bool) {
 	//Checking if $HOME variable is set 
 	if errHomePath != nil {
 		return errHomePath, false
@@ -35,7 +35,7 @@ func CreateKittyConf(){
 
 	fmt.Println("Verifying if there's a 'kitty.conf' file created...")
 
-	_, kittyConfExistence := kittyConfigExistence()	
+	_, kittyConfExistence := KittyConfigExistence()	
 
 	//kitty.conf file path
 	var kittyConfPath string = path
@@ -50,6 +50,9 @@ func CreateKittyConf(){
 		}
 
 		defer file.Close()
+		
+		displayStructure(file)
+
 		fmt.Println("kitty.conf has been created!")
 	} else {
 		fmt.Println("Ops! There's a file created")
