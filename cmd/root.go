@@ -10,6 +10,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	createKittyConf bool
+)
+
 //Variables that stores the root command in the CLI.
 var rootCmd = &cobra.Command{
 	Use: "skittyc",
@@ -17,7 +21,11 @@ var rootCmd = &cobra.Command{
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Welcome to skitty")
-		kittyc.CreateKittyConf()
+		
+		//Creating kitty.conf file inside of .config/kitty
+		if createKittyConf == true {
+			kittyc.CreateKittyConf()
+		}
 	},
 }
 
@@ -34,5 +42,8 @@ func init() {
 	//AddCommand(): method for adding principal subcommands for skittyc.
 	rootCmd.AddCommand(customize.CustomizeCmd)
 	rootCmd.AddCommand(setup.SetupCmd)
+
+	//Local flags
+	rootCmd.Flags().BoolVar(&createKittyConf, "create", false, "create a kitty.conf file")
 
 }
