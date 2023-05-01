@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/robertcharca/skittyc/cmd/customize"
 	"github.com/robertcharca/skittyc/kittyc"
-	"github.com/robertcharca/skittyc/cmd/setup"	
+	"github.com/robertcharca/skittyc/cmd/customize"
+	"github.com/robertcharca/skittyc/cmd/setup"
 	"github.com/spf13/cobra"
 )
 

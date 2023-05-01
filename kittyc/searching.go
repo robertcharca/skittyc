@@ -1,5 +1,0 @@
-package kittyc
-
-func searchingComments () {
-	//
-}

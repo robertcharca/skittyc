@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/robertcharca/skittyc/kittyc/kfeatures"
 )
 
 var (
@@ -19,7 +20,7 @@ var fontCmd = &cobra.Command{
 		fmt.Println("'fonts' working")
 		
 		if setting == "default" {
-			fmt.Println("Default fonts")
+			kfeatures.AddingDefaultFonts("appending file 2")	
 		} else if setting == "customized" {
 			fmt.Println("Customized fonts")
 		} else {
