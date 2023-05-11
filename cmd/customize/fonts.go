@@ -2,13 +2,8 @@ package customize
 
 import (
 	"fmt"
-	"log"
-
-	tea "github.com/charmbracelet/bubbletea"
+	
 	"github.com/spf13/cobra"
-
-	//"github.com/robertcharca/skittyc/kittyc/kfeatures"
-	"github.com/robertcharca/skittyc/internal/tui"
 )
 
 var (
@@ -25,16 +20,14 @@ var fontCmd = &cobra.Command{
 		fmt.Println("'fonts' working")
 		
 		if changing == true {
-			fmt.Println("Change")
+			fmt.Println("Changing")
 		}
 
 		if setting == true {
 			fmt.Println("Set")
 		}
 
-		if err := tea.NewProgram(tui.InitialModel()).Start(); err != nil {
-			log.Fatal(err)	
-		}
+		
 	},
 }
 
