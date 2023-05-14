@@ -2,7 +2,10 @@ package customize
 
 import (
 	"fmt"
-	
+	"log"
+
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/robertcharca/skittyc/tui"
 	"github.com/spf13/cobra"
 )
 
@@ -27,6 +30,11 @@ var fontCmd = &cobra.Command{
 			fmt.Println("Set")
 		}
 
+		m := tea.NewProgram(tui.FontModel())
+
+		if err := m.Start(); err != nil {
+			log.Fatalln(err)
+		}
 		
 	},
 }
