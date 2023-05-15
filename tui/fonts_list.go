@@ -7,11 +7,11 @@ import (
 	tea "github.com/charmbracelet/bubbletea"	
 )
 
-func (m fontModel) Init() tea.Cmd {
+func (m mainModel) Init() tea.Cmd {
 	return nil
 }
 
-func (m fontModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m mainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.list.SetWidth(msg.Width)
@@ -37,7 +37,7 @@ func (m fontModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m fontModel) View() string {
+func (m mainModel) View() string {
 	if m.choice != "" {
 		return quitTextStyle.Render(fmt.Sprintf("%s? Sounds good to me.", m.choice))
 	}
@@ -47,7 +47,7 @@ func (m fontModel) View() string {
 	return "\n" + m.list.View()
 }
 
-func FontModel() fontModel {
+func FontModel() mainModel {
 	items := []list.Item{
 		item("Font size"),
 		item("Bold font"),
@@ -65,5 +65,5 @@ func FontModel() fontModel {
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
 
-	return fontModel{list: l}
+	return mainModel{list: l}
 }
