@@ -2,10 +2,9 @@ package customize
 
 import (
 	"fmt"
-	"log"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/robertcharca/skittyc/tui"
+	"github.com/robertcharca/skittyc/kittyc/kfeatures"
+	"github.com/robertcharca/skittyc/prompts"
 	"github.com/spf13/cobra"
 )
 
@@ -23,19 +22,14 @@ var fontCmd = &cobra.Command{
 		fmt.Println("'fonts' working")
 		
 		if changing == true {
-			fmt.Println("Changing")
+			prompt, res := prompts.HandleFontChangeValues()
+			fmt.Printf("Prompt message: %s\n Prompt result: %s", prompt, res)
+			kfeatures.ChangingFontValues(prompt, res)
 		}
 
 		if setting == true {
 			fmt.Println("Set")
-		}
-
-		m := tea.NewProgram(tui.FontModel())
-
-		if err := m.Start(); err != nil {
-			log.Fatalln(err)
-		}
-		
+		}			
 	},
 }
 
