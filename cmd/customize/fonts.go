@@ -28,7 +28,8 @@ var fontCmd = &cobra.Command{
 		}
 
 		if setting == true {
-			fmt.Println("Set")
+			promt, res := prompts.HandleNewFont()	
+			fmt.Printf("1: %s\n 2: %s", promt, res)
 		}			
 	},
 }
