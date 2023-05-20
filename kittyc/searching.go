@@ -8,22 +8,11 @@ import (
 	"strings"	
 )
 
-func fileError(err error) {
+func WritingAtLine(section string, addedLine string) {
+	file, err := os.OpenFile(path, os.O_RDWR, 0644)			
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-}
-
-func scannerError (scanErr *bufio.Scanner) {
-	scanningFile := scanErr.Err()
-	if scanningFile != nil {
-		fmt.Println(scanningFile.Error())
-	}
-}
-
-func WritingAtLine(section string, addedLine string) {
-	file, err := os.OpenFile(Path, os.O_RDWR, 0644)			
-	fileError(err)
 
 	defer file.Close()
 
@@ -42,14 +31,19 @@ func WritingAtLine(section string, addedLine string) {
 		}
 	}
 
-	scannerError(scanner)
+	scanningFile := scanner.Err()
+	if scanningFile != nil {
+		fmt.Println(scanningFile.Error())
+	}
 
 	/*
 		Truncate: changes the size of the file. In this case, it change the last size to 0, 
 		which means it's completely empty.
 	*/
 	truncate := file.Truncate(0) 
-	fileError(truncate)
+	if truncate != nil {
+		fmt.Println(err.Error())
+	}
 
 	/*
 		Seek: sets a new offset according to a "principal" offset. In this case, the new
@@ -57,16 +51,22 @@ func WritingAtLine(section string, addedLine string) {
 		be positioned at the complete beginning of the file.
 	*/
 	_, offsErr := file.Seek(0, io.SeekStart)
-	fileError(offsErr)
+	if offsErr != nil {
+		fmt.Println(err.Error())
+	}
 	
 	writer := bufio.NewWriter(file)
 	for _, line := range lines {
 		_, err := writer.WriteString(line + "\n")
-		fileError(err)
+		if err != nil {
+		fmt.Println(err.Error())
+	}
 	}
 	
 	flush := writer.Flush()
-	fileError(flush)
+	if flush != nil {
+		fmt.Println(err.Error())
+	}
 
 	fmt.Println("Everything's great")
 }
