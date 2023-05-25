@@ -10,12 +10,14 @@ func SetNewFont () {
 	//
 }
 
-func ChangingFontValues (attribute, value string) {
+func ChangingFontValues (attribute, value string) {	
 	fontAttribute := strings.ReplaceAll(attribute, " ", "_")
 
 	var fontValue string
-	fontValue = fontAttribute + " " + value
+	fontValue = fontAttribute + " " + value	
 
-	kittyc.WritingAtLine("# Fonts", fontValue)	
+	if !kittyc.ModifyingAtLine(fontAttribute, fontValue) {
+		kittyc.WritingAtLine("# Fonts", fontValue)
+	}
 }
 
