@@ -43,7 +43,7 @@ func listAllFonts() []string{
 		fontsContent = append(fontsContent, value.Name())
 	}
 
-	return fontsContent
+	return fontsContent[1:]
 }
 
 func HandleNewFont () (string, string) {
@@ -67,12 +67,17 @@ func HandleNewFont () (string, string) {
 	fontSelectExisting := &survey.Select{
 		Message: "Select an existing font:",
 		Options: listFonts,
-	}
+	}	
 
-	if answers.Option == "automatic" {
-		survey.AskOne(fontSetNewInput, textInput)
-	} else {
+	switch answers.Option {
+	case "automatic":
+		survey.AskOne(fontSetNewInput, &textInput)
+		return answers.Option, textInput // Recall why you needed answers.Option
+	case "select from system":
 		survey.AskOne(fontSelectExisting, &existingFont)
+		return answers.Option, existingFont
+	default:
+		fmt.Println("Select a valid option")
 	}
 
 	return answers.Option, ""	
