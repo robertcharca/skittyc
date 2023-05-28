@@ -6,8 +6,18 @@ import (
 	"github.com/robertcharca/skittyc/kittyc"
 )
 
-func SetNewFont () {
-	//
+func AutomaticNewFont (font string) {
+	// Download a font or search if this font already exists
+}
+
+func SetNewFont (font string) {
+	fontAttribute := "font_family"
+
+	fontValue := fontAttribute + " " + font
+	
+	if !kittyc.ModifyingAtLine(fontAttribute, fontValue) {
+		kittyc.WritingAtLine("# Fonts", fontValue)
+	} 
 }
 
 func ChangingFontValues (attribute, value string) {	
