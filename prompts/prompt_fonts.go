@@ -1,11 +1,10 @@
 package prompts
 
 import (
-	"fmt"
-	"io/ioutil"
-	"log"	
+	"fmt"	
+	"log"
 
-	"github.com/AlecAivazis/survey/v2"
+	"github.com/AlecAivazis/survey/v2"	
 )
 
 var fontChangeQuestion = []*survey.Question{
@@ -24,26 +23,9 @@ var fontSetNewQuestion = []*survey.Question{
 		Name: "setNewFont",
 		Prompt: &survey.Select{
 			Message: "How would you like to set your new font?",
-			Options: []string{"automatic", "select from system"},	
+			Options: []string{"from name", "from url", "select from system"},	
 		},
 	},
-}
-
-func listAllFonts() []string{	
-	var fontsContent []string
-
-	fontsPath := "/usr/share/fonts/truetype/"
-	
-	currentDir, err := ioutil.ReadDir(fontsPath) 
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	for _, value := range currentDir {
-		fontsContent = append(fontsContent, value.Name())
-	}
-
-	return fontsContent[1:]
 }
 
 func HandleNewFont () (string, string) {
@@ -52,14 +34,7 @@ func HandleNewFont () (string, string) {
 	err := survey.Ask(fontSetNewQuestion, &answers)
 	if err != nil {
 		log.Fatalln(err)
-	}
-
-	var textInput string
-
-	fontSetNewInput := &survey.Input{
-		Message: "Write your desired font:",
-
-	}
+	}	
 
 	var existingFont string
 
@@ -70,9 +45,10 @@ func HandleNewFont () (string, string) {
 	}	
 
 	switch answers.Option {
-	case "automatic":
-		survey.AskOne(fontSetNewInput, &textInput)
-		return answers.Option, textInput // Recall why you needed answers.Option
+	case "from name":
+		//	
+	case "from url":
+		//
 	case "select from system":
 		survey.AskOne(fontSelectExisting, &existingFont)
 		return answers.Option, existingFont
