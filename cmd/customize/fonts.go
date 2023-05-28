@@ -30,6 +30,13 @@ var fontCmd = &cobra.Command{
 		if setting == true {
 			promt, res := prompts.HandleNewFont()	
 			fmt.Printf("1: %s\n 2: %s", promt, res)
+
+			switch promt {
+			case "automatic":
+				fmt.Println("automatic")
+			case "select from system":
+				kfeatures.SetNewFont(res)
+			}
 		}			
 	},
 }
