@@ -1,10 +1,10 @@
 package prompts
 
 import (
-	"fmt"	
-	"log"
+	"fmt"
+	"log"	
 
-	"github.com/AlecAivazis/survey/v2"	
+	"github.com/AlecAivazis/survey/v2"
 )
 
 var fontChangeQuestion = []*survey.Question{
@@ -67,18 +67,38 @@ func HandleFontChangeValues () (string, string) {
 		log.Fatalln(err)	
 	}
 
-	var textInput string	
+	var fontStyle string
+	
+	// Survey for listing font styles according to a font	
+	fontStyleList := identifyFont()
+	specificInput := specificFontStyles(answers.Option, fontStyleList)
+	
+	fontChangeStyleList := &survey.Select{
+		Message: answers.Option,
+		Options: specificInput,
+	}
 
-	fontChangeInput := &survey.Input{
+	// Survey for font size input (numeric)
+	fontSize := &survey.Input{
 		Message: answers.Option,
 	}
 
-	textInputErr := survey.AskOne(fontChangeInput, &textInput)
+	// Changing survey inputs according to the "attribute"
+	if answers.Option != "font size" {
+		fsInput := survey.AskOne(fontChangeStyleList, &fontStyle)
+		if fsInput != nil {
+			log.Fatalln(fontStyle)
+			return " ", " "
+		}
 
-	if textInputErr != nil {
-		log.Fatalln(textInput)
-		return " ", " "
+		return answers.Option, fontStyle
 	}
 
-	return answers.Option, textInput
+	fsInput := survey.AskOne(fontSize, &fontStyle)
+	if fsInput != nil {
+		log.Fatalln(fontStyle)
+		return " ", " " 
+	}
+
+	return answers.Option, fontStyle
 }
