@@ -6,8 +6,8 @@ import (
 	"github.com/robertcharca/skittyc/kittyc"
 )
 
-func AutomaticNewFont (font string) {
-	// Download a font or search if this font already exists
+func DownloadNewFont (font string) {
+	//
 }
 
 func SetNewFont (font string) {
