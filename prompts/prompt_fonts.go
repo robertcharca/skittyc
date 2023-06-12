@@ -1,8 +1,9 @@
 package prompts
 
 import (
+	"errors"
 	"fmt"
-	"log"	
+	"log"
 
 	"github.com/AlecAivazis/survey/v2"
 )
@@ -23,11 +24,12 @@ var fontSetNewQuestion = []*survey.Question{
 		Name: "setNewFont",
 		Prompt: &survey.Select{
 			Message: "How would you like to set your new font?",
-			Options: []string{"from name", "from url", "select from system"},	
+			Options: []string{"automatic", "url", "select from system"},	
 		},
 	},
 }
 
+// HandleNewFont: sets a "select" survey that list different options to set a new font. 
 func HandleNewFont () (string, string) {
 	answers := struct{ Option string `survey:"setNewFont"`}{}
 
@@ -42,13 +44,36 @@ func HandleNewFont () (string, string) {
 	fontSelectExisting := &survey.Select{
 		Message: "Select an existing font:",
 		Options: listFonts,
-	}	
+	}
+
+	fontUrlDownload := &survey.Input{
+		Message: "Paste a url for implementing your font:",
+	}
+
+	fontAutomatic := &survey.Input{
+		Message: "Type a font:",
+		Suggest: func(toComplete string) []string {
+			fontList := listAllFonts()
+			return fontList
+		},
+	}
+
+	fontUrlValidation := &survey.Question{	
+		Validate: func (url interface{}) error {
+			if link, ok := url.(string); !ok || len(link) < 11 {
+				return errors.New("This link cannot be less than 11 characters.")
+			}
+			return nil
+		},
+	}
 
 	switch answers.Option {
-	case "from name":
-		//	
-	case "from url":
-		//
+	case "automatic":
+		survey.AskOne(fontAutomatic, &existingFont)	
+		return answers.Option, existingFont
+	case "url":
+		survey.AskOne(fontUrlDownload, &existingFont, survey.WithValidator(fontUrlValidation.Validate))
+		return answers.Option, existingFont
 	case "select from system":
 		survey.AskOne(fontSelectExisting, &existingFont)
 		return answers.Option, existingFont
@@ -59,6 +84,8 @@ func HandleNewFont () (string, string) {
 	return answers.Option, ""	
 }
 
+// HandleFontChangeValues: sets a "select" survey for the font "change attributes".
+// Based on the selected attribute, it will set another "select" survey for an attribute according to a implemented font. 
 func HandleFontChangeValues () (string, string) {
 	answers := struct{ Option string `survey:"changeFont"`}{}
 

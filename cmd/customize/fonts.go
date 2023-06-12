@@ -29,11 +29,20 @@ var fontCmd = &cobra.Command{
 
 		if setting == true {
 			promt, res := prompts.HandleNewFont()	
-			fmt.Printf("1: %s\n 2: %s", promt, res)
+			fmt.Printf("Prompt message: %s\n Prompt result: %s", promt, res)
 
 			switch promt {
 			case "automatic":
-				fmt.Println("automatic")
+				unknownFont, download := prompts.ConfirmFontExistence(res)
+				
+				if unknownFont == false && download == false {
+					fmt.Println("Font: ", unknownFont, "Confirm: ", download)
+					kfeatures.SetNewFont(res)
+				} else if unknownFont == true && download == true{
+					fmt.Println("Download font")
+				} 
+			case "url":
+				fmt.Println("url")
 			case "select from system":
 				kfeatures.SetNewFont(res)
 			}
