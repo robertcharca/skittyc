@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/robertcharca/skittyc/kittyc"
 )
 
 var fontChangeQuestion = []*survey.Question{
@@ -40,7 +41,7 @@ func HandleNewFont () (string, string) {
 
 	var existingFont string
 
-	listFonts := listAllFonts()
+	listFonts := kittyc.ListAllFonts()
 	fontSelectExisting := &survey.Select{
 		Message: "Select an existing font:",
 		Options: listFonts,
@@ -53,7 +54,7 @@ func HandleNewFont () (string, string) {
 	fontAutomatic := &survey.Input{
 		Message: "Type a font:",
 		Suggest: func(toComplete string) []string {
-			fontList := listAllFonts()
+			fontList := kittyc.ListAllFonts()
 			return fontList
 		},
 	}

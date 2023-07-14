@@ -40,6 +40,8 @@ var fontCmd = &cobra.Command{
 					kfeatures.SetNewFont(res)
 				} else if unknownFont == true && download == true{
 					fmt.Println("Download font")
+					font := kfeatures.DownloadNewFont(res)
+					kfeatures.SetFontComparing(font)
 				} 
 			case "url":
 				fmt.Println("url")

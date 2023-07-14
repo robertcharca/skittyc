@@ -6,7 +6,7 @@ import (
 )
 
 func ConfirmFontExistence (font string) (bool, bool) {
-	fontExistence, _ := kittyc.SearchingValue(listAllFonts(), font)
+	fontExistence, _ := kittyc.SearchingValue(kittyc.ListAllFonts(), font)
 
 	unknownFont := false
 

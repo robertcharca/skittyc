@@ -10,16 +10,21 @@ import (
 	"strings"
 
 	"github.com/robertcharca/skittyc/kittyc"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func verifyAutomaticDownload (font string) (bool, string, bool) {
 	var (
+		corrFont string
 		urlFirstAlternative string
 		urlSecondAlternative string
 	)
 
-	urlFirstAlternative = "https://www.1001fonts.com/download/" + font + ".zip"
-	urlSecondAlternative = "https://www.fontsquirrel.com/fonts/download/" + font
+	corrFont = strings.ReplaceAll(font, " ", "-")
+
+	urlFirstAlternative = "https://www.1001fonts.com/download/" + corrFont + ".zip"
+	urlSecondAlternative = "https://www.fontsquirrel.com/fonts/download/" + corrFont
 
 	respFirst, err := http.Get(urlFirstAlternative)
 	if err != nil {
@@ -98,14 +103,38 @@ func downloadFontZip (font string) (string, bool, string) {
 	return fileName, true, fontsPath
 }
 
-func DownloadNewFont (font string) {
+func DownloadNewFont (font string) string {
 	file, downloaded, path := downloadFontZip(font)
 
 	if downloaded {
 		kittyc.UnzipFile(file, path)
 		fmt.Println("Unzipped file. Check it out!")
+		return font
 	} else {
 		fmt.Println("Problem. Check it out!")
+	}
+
+	return ""
+}
+
+func SetFontComparing (font string) {
+	var lowerFonts []string
+
+	entryFont := strings.ToLower(font)
+	editedFonts := kittyc.ListAllFonts()	
+
+	for _, v := range(editedFonts) {
+		lower := strings.ToLower(v)
+		lowerFonts = append(lowerFonts, lower)
+	}	
+
+	fonts, _ := kittyc.SearchingValue(lowerFonts, entryFont)	
+
+	if !fonts {
+		fmt.Println("Does this font exist?")
+	} else {
+		SetNewFont(cases.Title(language.English, cases.NoLower).String(entryFont))
+		fmt.Println("Implemented font. Check it out")
 	}
 }
 
