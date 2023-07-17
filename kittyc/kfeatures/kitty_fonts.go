@@ -14,32 +14,53 @@ import (
 	"golang.org/x/text/language"
 )
 
-func verifyAutomaticDownload (font string) (bool, string, bool) {
+type urlFont struct {
+	url string
+}
+
+func (u urlFont) verifyUrlFontDownload() (int, bool) {
+	resp, err := http.Get(u.url)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	
+	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
+		return resp.StatusCode, true
+	}
+
+	return 0, false
+}
+
+func (z urlFont) verifyZipFontDowload() bool {
+	if strings.Contains(z.url, ".zip") {
+		return true
+	}
+
+	return false
+}
+
+func verifyAutomaticFontDownload (font string) (bool, string, bool) {
 	var (
 		corrFont string
-		urlFirstAlternative string
-		urlSecondAlternative string
+		firstUrl string
+		secondUrl string
 	)
 
 	corrFont = strings.ReplaceAll(font, " ", "-")
 
-	urlFirstAlternative = "https://www.1001fonts.com/download/" + corrFont + ".zip"
-	urlSecondAlternative = "https://www.fontsquirrel.com/fonts/download/" + corrFont
+	firstUrl = "https://www.1001fonts.com/download/" + corrFont + ".zip"
+	secondUrl = "https://www.fontsquirrel.com/fonts/download/" + corrFont
+	
+	urlFistAlt := urlFont{firstUrl}
+	urlSecondAlt := urlFont{secondUrl}
+	urlThirdAlt := urlFont{font}	
 
-	respFirst, err := http.Get(urlFirstAlternative)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	respSecond, err := http.Get(urlSecondAlternative)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	if respFirst.StatusCode >= 200 && respFirst.StatusCode <= 299 {
-		return true, urlFirstAlternative, true
-	} else if respSecond.StatusCode >= 200 && respSecond.StatusCode <= 299 {
-		return true, urlSecondAlternative, false
+	if _, resp := urlFistAlt.verifyUrlFontDownload(); resp {
+		return true, firstUrl, urlFistAlt.verifyZipFontDowload()
+	} else if _, resp := urlSecondAlt.verifyUrlFontDownload(); resp {
+		return true, secondUrl, urlSecondAlt.verifyZipFontDowload()
+	} else if _, resp := urlThirdAlt.verifyUrlFontDownload(); resp {
+		return true, font, urlThirdAlt.verifyZipFontDowload()
 	}
 
 	return false, "", false
@@ -54,7 +75,7 @@ func downloadFontZip (font string) (string, bool, string) {
 	homePath, _ := os.UserHomeDir()
 	fontsPath = homePath + "/.local/share/fonts/"
 
-	fontStatus, download, zip := verifyAutomaticDownload(font)
+	fontStatus, download, zip := verifyAutomaticFontDownload(font)
 
 	if !fontStatus {
 		fmt.Println("This font cannot be downloaded.")
