@@ -28,7 +28,7 @@ func (u urlFont) verifyUrlFontDownload() (int, bool) {
 		return resp.StatusCode, true
 	}
 
-	return 0, false
+	return resp.StatusCode, false
 }
 
 func (z urlFont) verifyZipFontDowload() bool {
@@ -39,7 +39,8 @@ func (z urlFont) verifyZipFontDowload() bool {
 	return false
 }
 
-func verifyAutomaticFontDownload (font string) (bool, string, bool) {
+// verifyFontDownload: compares three download alternatives and checks if the status is between 200 and 299
+func verifyFontDownload (font string) (bool, string, bool) {
 	var (
 		corrFont string
 		firstUrl string
@@ -53,7 +54,7 @@ func verifyAutomaticFontDownload (font string) (bool, string, bool) {
 	
 	urlFistAlt := urlFont{firstUrl}
 	urlSecondAlt := urlFont{secondUrl}
-	urlThirdAlt := urlFont{font}	
+	urlThirdAlt := urlFont{font}
 
 	if _, resp := urlFistAlt.verifyUrlFontDownload(); resp {
 		return true, firstUrl, urlFistAlt.verifyZipFontDowload()
@@ -75,13 +76,15 @@ func downloadFontZip (font string) (string, bool, string) {
 	homePath, _ := os.UserHomeDir()
 	fontsPath = homePath + "/.local/share/fonts/"
 
-	fontStatus, download, zip := verifyAutomaticFontDownload(font)
+	// Verifying if the font can be downloaded 
+	fontStatus, download, zip := verifyFontDownload(font)
 
 	if !fontStatus {
 		fmt.Println("This font cannot be downloaded.")
 		return "", false, ""
 	}
 
+	// Getting the download url
 	fileURL, err := url.Parse(download)
 	if err != nil {
 		log.Fatalln(err)
@@ -90,6 +93,7 @@ func downloadFontZip (font string) (string, bool, string) {
 	path := fileURL.Path
 	segments := strings.Split(path, "/")
 
+	// Verifying if it's a .zip file for creating it
 	if zip {
 		fileName = segments[len(segments)-1]
 	} else {
@@ -125,12 +129,18 @@ func downloadFontZip (font string) (string, bool, string) {
 }
 
 func DownloadNewFont (font string) string {
+	var fontName string
+
+	//Getting the file name, verifying if it was downloaded and getting the font path
 	file, downloaded, path := downloadFontZip(font)
 
 	if downloaded {
 		kittyc.UnzipFile(file, path)
 		fmt.Println("Unzipped file. Check it out!")
-		return font
+		fontName = strings.ReplaceAll(file, ".zip", "")
+		newFN := strings.ReplaceAll(fontName, "-", " ")
+
+		return newFN 
 	} else {
 		fmt.Println("Problem. Check it out!")
 	}
@@ -149,7 +159,7 @@ func SetFontComparing (font string) {
 		lowerFonts = append(lowerFonts, lower)
 	}	
 
-	fonts, _ := kittyc.SearchingValue(lowerFonts, entryFont)	
+	fonts, _ := kittyc.SearchingSimilarValues(lowerFonts, entryFont)
 
 	if !fonts {
 		fmt.Println("Does this font exist?")
