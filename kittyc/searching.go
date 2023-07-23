@@ -22,3 +22,15 @@ func SearchingSimilarValues(list []string, svalue string) (bool, error) {
 	}
 	return false, notFound
 }
+
+func ConvertStringToList(s string) []string {	
+	var sList []string
+
+	list := []rune(s)
+
+	for _, v := range list { 
+		sList = append(sList, string(v))
+	}
+
+	return sList
+}

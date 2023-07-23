@@ -40,7 +40,7 @@ func (z urlFont) verifyZipFontDowload() bool {
 }
 
 // verifyFontDownload: compares three download alternatives and checks if the status is between 200 and 299
-func verifyFontDownload (font string) (bool, string, bool) {
+func verifyFontDownload(font string) (bool, string, bool) {
 	var (
 		corrFont string
 		firstUrl string
@@ -67,7 +67,7 @@ func verifyFontDownload (font string) (bool, string, bool) {
 	return false, "", false
 }
 
-func downloadFontZip (font string) (string, bool, string) {
+func downloadFontZip(font string) (string, bool, string) {
 	var (
 		fileName string
 		fontsPath string
@@ -128,7 +128,7 @@ func downloadFontZip (font string) (string, bool, string) {
 	return fileName, true, fontsPath
 }
 
-func DownloadNewFont (font string) string {
+func DownloadNewFont(font string) string {
 	var fontName string
 
 	//Getting the file name, verifying if it was downloaded and getting the font path
@@ -148,7 +148,7 @@ func DownloadNewFont (font string) string {
 	return ""
 }
 
-func SetFontComparing (font string) {
+func SetFontComparing(font string) {
 	var lowerFonts []string
 
 	entryFont := strings.ToLower(font)
@@ -169,7 +169,7 @@ func SetFontComparing (font string) {
 	}
 }
 
-func SetNewFont (font string) {
+func SetNewFont(font string) {
 	fontAttribute := "font_family"
 
 	fontValue := fontAttribute + " " + font
@@ -178,15 +178,3 @@ func SetNewFont (font string) {
 		kittyc.WritingAtLine("# Fonts", fontValue)
 	} 
 }
-
-func ChangingFontValues (attribute, value string) {	
-	fontAttribute := strings.ReplaceAll(attribute, " ", "_")
-
-	var fontValue string
-	fontValue = fontAttribute + " " + value	
-
-	if !kittyc.ModifyingAtLine(fontAttribute, fontValue) {
-		kittyc.WritingAtLine("# Fonts", fontValue)
-	}
-}
-

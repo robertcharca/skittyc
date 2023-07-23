@@ -1,7 +1,6 @@
 package prompts
 
-import (
-	"errors"
+import (	
 	"fmt"
 	"log"
 
@@ -59,21 +58,12 @@ func HandleNewFont () (string, string) {
 		},
 	}
 
-	fontUrlValidation := &survey.Question{	
-		Validate: func (url interface{}) error {
-			if link, ok := url.(string); !ok || len(link) < 11 {
-				return errors.New("This link cannot be less than 11 characters.")
-			}
-			return nil
-		},
-	}
-
 	switch answers.Option {
 	case "automatic":
 		survey.AskOne(fontAutomatic, &existingFont)	
 		return answers.Option, existingFont
 	case "url":
-		survey.AskOne(fontUrlDownload, &existingFont, survey.WithValidator(fontUrlValidation.Validate))
+		survey.AskOne(fontUrlDownload, &existingFont, survey.WithValidator(urlValidation.Validate))
 		return answers.Option, existingFont
 	case "select from system":
 		survey.AskOne(fontSelectExisting, &existingFont)

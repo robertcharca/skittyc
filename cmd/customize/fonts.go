@@ -7,8 +7,8 @@ import (
 )
 
 var (	
-	setting bool	
-	changing bool
+	setF bool	
+	changeF bool
 )
 
 var fontCmd = &cobra.Command{
@@ -16,12 +16,12 @@ var fontCmd = &cobra.Command{
 	Short: "'fonts' subcommand",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		if changing == true {
+		if changeF == true {
 			prompt, res := prompts.HandleFontChangeValues()	
-			kfeatures.ChangingFontValues(prompt, res)
+			kfeatures.ChangingValues(prompt, res, "# Fonts")
 		}
 
-		if setting == true {
+		if setF == true {
 			promt, res := prompts.HandleNewFont()		
 
 			switch promt {
@@ -49,7 +49,7 @@ func init() {
 	CustomizeCmd.AddCommand(fontCmd)
 		
 	// Flag for changing font values (size, bold, italic)
-	fontCmd.Flags().BoolVarP(&changing, "change", "c", false, "Changing font values.")
+	fontCmd.Flags().BoolVarP(&changeF, "change", "c", false, "Changing font values.")
 	// Flag for setting a new font 
-	fontCmd.Flags().BoolVarP(&setting, "set", "s", false, "Setting a new font.")	
+	fontCmd.Flags().BoolVarP(&setF, "set", "s", false, "Setting a new font.")	
 }
