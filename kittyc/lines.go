@@ -134,3 +134,7 @@ func ModifyingAtLine (oldLine, newLine string) bool {
 	fmt.Println("Value updated")
 	return true
 } 
+
+func WritingMultipleLines(section string, addedLines []string) {
+	//
+}

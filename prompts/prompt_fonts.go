@@ -30,7 +30,7 @@ var fontSetNewQuestion = []*survey.Question{
 }
 
 // HandleNewFont: sets a "select" survey that list different options to set a new font. 
-func HandleNewFont () (string, string) {
+func HandleNewFont() (string, string) {
 	answers := struct{ Option string `survey:"setNewFont"`}{}
 
 	err := survey.Ask(fontSetNewQuestion, &answers)
@@ -77,7 +77,7 @@ func HandleNewFont () (string, string) {
 
 // HandleFontChangeValues: sets a "select" survey for the font "change attributes".
 // Based on the selected attribute, it will set another "select" survey for an attribute according to a implemented font. 
-func HandleFontChangeValues () (string, string) {
+func HandleFontChangeValues() (string, string) {
 	answers := struct{ Option string `survey:"changeFont"`}{}
 
 	err := survey.Ask(fontChangeQuestion, &answers)

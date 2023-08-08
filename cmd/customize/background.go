@@ -28,12 +28,10 @@ var backforeCmd = &cobra.Command{
 	},
 }
 
-func init() {	
-	// Adding the command `fonts` to `customize`.
+func init() {		
 	CustomizeCmd.AddCommand(backforeCmd)
-		
-	// Flag for changing font values (size, bold, italic)
+	
 	backforeCmd.Flags().BoolVarP(&changeBF, "change", "c", false, "Changing background styles.")
-	// Flag for setting a new font 
+	
 	backforeCmd.Flags().BoolVarP(&setBF, "set", "s", false, "Set backgroud styles.")	
 }
