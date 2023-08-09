@@ -14,31 +14,6 @@ import (
 	"golang.org/x/text/language"
 )
 
-type urlFont struct {
-	url string
-}
-
-func (u urlFont) verifyUrlFontDownload() (int, bool) {
-	resp, err := http.Get(u.url)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	
-	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
-		return resp.StatusCode, true
-	}
-
-	return resp.StatusCode, false
-}
-
-func (z urlFont) verifyZipFontDowload() bool {
-	if strings.Contains(z.url, ".zip") {
-		return true
-	}
-
-	return false
-}
-
 // verifyFontDownload: compares three download alternatives and checks if the status is between 200 and 299
 func verifyFontDownload(font string) (bool, string, bool) {
 	var (
@@ -52,16 +27,16 @@ func verifyFontDownload(font string) (bool, string, bool) {
 	firstUrl = "https://www.1001fonts.com/download/" + corrFont + ".zip"
 	secondUrl = "https://www.fontsquirrel.com/fonts/download/" + corrFont
 	
-	urlFistAlt := urlFont{firstUrl}
-	urlSecondAlt := urlFont{secondUrl}
-	urlThirdAlt := urlFont{font}
+	urlFistAlt := kittyc.UrlDownload{Link: firstUrl}
+	urlSecondAlt := kittyc.UrlDownload{Link: secondUrl}
+	urlThirdAlt := kittyc.UrlDownload{Link: font}
 
-	if _, resp := urlFistAlt.verifyUrlFontDownload(); resp {
-		return true, firstUrl, urlFistAlt.verifyZipFontDowload()
-	} else if _, resp := urlSecondAlt.verifyUrlFontDownload(); resp {
-		return true, secondUrl, urlSecondAlt.verifyZipFontDowload()
-	} else if _, resp := urlThirdAlt.verifyUrlFontDownload(); resp {
-		return true, font, urlThirdAlt.verifyZipFontDowload()
+	if _, resp := urlFistAlt.VerifyDownload(); resp {
+		return true, firstUrl, urlFistAlt.VerifyZipFontDowload()
+	} else if _, resp := urlSecondAlt.VerifyDownload(); resp {
+		return true, secondUrl, urlSecondAlt.VerifyZipFontDowload()
+	} else if _, resp := urlThirdAlt.VerifyDownload(); resp {
+		return true, font, urlThirdAlt.VerifyZipFontDowload()
 	}
 
 	return false, "", false

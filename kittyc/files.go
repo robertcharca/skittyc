@@ -5,10 +5,109 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
 )
+
+type UrlDownload struct {
+	Link string
+	Format string
+	DownloadPath string
+}
+
+func (u UrlDownload) VerifyDownload() (int, bool) {
+	resp, err := http.Get(u.Link)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	
+	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
+		return resp.StatusCode, true
+	}
+
+	return resp.StatusCode, false
+}
+
+func (z UrlDownload) VerifyZipFontDowload() bool {
+	if strings.Contains(z.Link, ".zip") {
+		return true
+	}
+
+	return false
+}
+
+func (u UrlDownload) VerifyFormat() (string, string, bool) {
+	path := u.Link
+
+	fileUrl, err := url.Parse(path)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	urlPath := fileUrl.Path
+	segments := strings.Split(urlPath, "/")
+
+	lastPathVal := segments[len(segments)-1]
+
+	if strings.Contains(lastPathVal, ".") {
+		fileSep := strings.Split(lastPathVal, ".")
+
+		return fileSep[0], "." + fileSep[1], true
+	}
+
+	return lastPathVal, "", false
+}
+
+func DownloadFile(urlPath UrlDownload) (string, bool, string) {
+	var fileName string
+
+	_, urlValidation := urlPath.VerifyDownload()
+	homePath, _:= os.UserHomeDir()
+	downloadsPath := homePath + urlPath.DownloadPath
+
+	if !urlValidation {
+		return "", false, ""
+	}
+
+	name, format, hasFileFormat := urlPath.VerifyFormat()
+
+	if !hasFileFormat {
+		fileName = name + urlPath.Format
+	} else {
+		fileName = name + format
+	}
+
+	fmt.Println("fileName: ", fileName)
+
+	file, err := os.Create(downloadsPath + fileName)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	client := http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			req.URL.Opaque = req.URL.Path
+			return nil
+		},
+	}
+
+	resp, err := client.Get(urlPath.Link)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	defer resp.Body.Close()
+
+	size, err := io.Copy(file, resp.Body)
+
+	defer file.Close()
+
+	fmt.Printf("Downloaded a file %s with size %d", fileName, size)
+	return "", false, downloadsPath
+}
 
 func UnzipFile(fileName string, path string) {
 	dirName := strings.Split(fileName, ".zip")

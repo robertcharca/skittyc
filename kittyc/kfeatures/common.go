@@ -1,6 +1,6 @@
 package kfeatures
 
-import (
+import (	
 	"strings"
 
 	"github.com/robertcharca/skittyc/kittyc"
@@ -15,4 +15,8 @@ func ChangingValues(attribute, value , section string) {
 	if !kittyc.ModifyingAtLine(chAttribute, chValue) {
 		kittyc.WritingAtLine(section, chValue)
 	}
+}
+
+func getMultipleValues(path string, keyword string) []string {
+	return []string{}
 }

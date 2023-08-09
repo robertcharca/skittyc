@@ -3,6 +3,8 @@ package prompts
 import (
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -21,7 +23,8 @@ var colorSetQuestion = []*survey.Question{
 var colorScheme = []string{"Black", "Red", "Green", "Yellow", "Blue", "Magenta", "Cyan", "White"}
 
 func HandleSetColor() (string, string) {
-	answers := struct{ Option string `survey:"setColor"`}{}
+	answers := struct{ Option string `survey:"setColor"`}{}	
+	homePath, _ := os.UserHomeDir()
 
 	err := survey.Ask(colorSetQuestion, &answers)
 	if err != nil {
@@ -30,8 +33,18 @@ func HandleSetColor() (string, string) {
 
 	var existingColor string	
 	
-	colorSchemeUrlDownload := &survey.Input{
-		Message: "Paste a url for implementing your color scheme:",
+	colorSchemeUrlOrPath := &survey.Input{
+		Message: "Paste a url or .conf/.txt file path of your color scheme:",
+		Suggest: func(toComplete string) []string {
+			var filteredFiles []string
+
+			confFiles, _ := filepath.Glob(homePath + toComplete + "*.conf")
+			textFiles, _ := filepath.Glob(homePath + toComplete + "*.txt")
+			confFiles = append(confFiles, textFiles...)
+			filteredFiles = append(filteredFiles, confFiles...)
+
+			return filteredFiles
+		},
 	}
 	
 	colorSchemeListMultiple := &survey.Select{
@@ -41,7 +54,9 @@ func HandleSetColor() (string, string) {
 
 	switch answers.Option {
 	case "color scheme":
-		survey.AskOne(colorSchemeUrlDownload, &existingColor, survey.WithValidator(urlValidation.Validate))
+		survey.AskOne(colorSchemeUrlOrPath, &existingColor, survey.WithValidator(survey.MinLength(6)))
+
+		return answers.Option, existingColor
 	case "select color":
 		survey.AskOne(colorSchemeListMultiple, &existingColor)
 
