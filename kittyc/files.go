@@ -31,14 +31,6 @@ func (u UrlDownload) VerifyDownload() (int, bool) {
 	return resp.StatusCode, false
 }
 
-func (z UrlDownload) VerifyZipFontDowload() bool {
-	if strings.Contains(z.Link, ".zip") {
-		return true
-	}
-
-	return false
-}
-
 func (u UrlDownload) VerifyFormat() (string, string, bool) {
 	path := u.Link
 
@@ -106,10 +98,10 @@ func DownloadFile(urlPath UrlDownload) (string, bool, string) {
 	defer file.Close()
 
 	fmt.Printf("Downloaded a file %s with size %d", fileName, size)
-	return "", false, downloadsPath
+	return fileName, true, downloadsPath
 }
 
-func UnzipFile(fileName string, path string) {
+func UnzipFile(path, fileName string) {
 	dirName := strings.Split(fileName, ".zip")
 	finalDirZip := dirName[0]
 

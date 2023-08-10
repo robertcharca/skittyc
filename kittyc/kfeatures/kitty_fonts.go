@@ -1,12 +1,7 @@
 package kfeatures
 
 import (
-	"fmt"
-	"io"
-	"log"
-	"net/http"
-	"net/url"
-	"os"
+	"fmt"	
 	"strings"
 
 	"github.com/robertcharca/skittyc/kittyc"
@@ -15,106 +10,53 @@ import (
 )
 
 // verifyFontDownload: compares three download alternatives and checks if the status is between 200 and 299
-func verifyFontDownload(font string) (bool, string, bool) {
-	var (
-		corrFont string
-		firstUrl string
-		secondUrl string
-	)
+func verifyFontDownload(font string) kittyc.UrlDownload {
+	corrFont := strings.ReplaceAll(font, " ", "-")
 
-	corrFont = strings.ReplaceAll(font, " ", "-")
-
-	firstUrl = "https://www.1001fonts.com/download/" + corrFont + ".zip"
-	secondUrl = "https://www.fontsquirrel.com/fonts/download/" + corrFont
+	firstUrl := "https://www.1001fonts.com/download/" + corrFont + ".zip"
+	secondUrl := "https://www.fontsquirrel.com/fonts/download/" + corrFont
 	
-	urlFistAlt := kittyc.UrlDownload{Link: firstUrl}
-	urlSecondAlt := kittyc.UrlDownload{Link: secondUrl}
-	urlThirdAlt := kittyc.UrlDownload{Link: font}
-
-	if _, resp := urlFistAlt.VerifyDownload(); resp {
-		return true, firstUrl, urlFistAlt.VerifyZipFontDowload()
-	} else if _, resp := urlSecondAlt.VerifyDownload(); resp {
-		return true, secondUrl, urlSecondAlt.VerifyZipFontDowload()
-	} else if _, resp := urlThirdAlt.VerifyDownload(); resp {
-		return true, font, urlThirdAlt.VerifyZipFontDowload()
-	}
-
-	return false, "", false
-}
-
-func downloadFontZip(font string) (string, bool, string) {
-	var (
-		fileName string
-		fontsPath string
-	)
-
-	homePath, _ := os.UserHomeDir()
-	fontsPath = homePath + "/.local/share/fonts/"
-
-	// Verifying if the font can be downloaded 
-	fontStatus, download, zip := verifyFontDownload(font)
-
-	if !fontStatus {
-		fmt.Println("This font cannot be downloaded.")
-		return "", false, ""
-	}
-
-	// Getting the download url
-	fileURL, err := url.Parse(download)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	path := fileURL.Path
-	segments := strings.Split(path, "/")
-
-	// Verifying if it's a .zip file for creating it
-	if zip {
-		fileName = segments[len(segments)-1]
-	} else {
-		fileName = segments[len(segments)-1] + ".zip"
-	}
-	
-	file, err := os.Create(fontsPath + fileName)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	client := http.Client{
-		CheckRedirect: func(req *http.Request, via []*http.Request) error {
-			req.URL.Opaque = req.URL.Path
-			return nil
+	urlAlternatives := []kittyc.UrlDownload{
+		{
+			Link: firstUrl,
+			Format: ".zip",
+			DownloadPath: "/.local/share/fonts/",
+		},
+		{
+			Link: secondUrl,
+			Format: ".zip",
+			DownloadPath: "/.local/share/fonts/",
+		},
+		{
+			Link: font,
+			Format: ".zip",
+			DownloadPath: "/.local/share/fonts/",
 		},
 	}
 
-	resp, err := client.Get(download)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	for _, alts := range urlAlternatives {
+		_, status := alts.VerifyDownload()
 
-	defer resp.Body.Close()
+		if status {
+			return alts
+		}
+	}	
 
-	size, err := io.Copy(file, resp.Body)
-
-	defer file.Close()
-
-	fmt.Printf("Downloaded a file %s with size %d", fileName, size)
-
-	return fileName, true, fontsPath
+	return kittyc.UrlDownload{}
 }
 
 func DownloadNewFont(font string) string {
 	var fontName string
 
-	//Getting the file name, verifying if it was downloaded and getting the font path
-	file, downloaded, path := downloadFontZip(font)
+	fontDownloadUrl := verifyFontDownload(font)	
+	file, downloaded, path := kittyc.DownloadFile(fontDownloadUrl) 
 
 	if downloaded {
-		kittyc.UnzipFile(file, path)
+		kittyc.UnzipFile(path, file)
 		fmt.Println("Unzipped file. Check it out!")
 		fontName = strings.ReplaceAll(file, ".zip", "")
 		newFN := strings.ReplaceAll(fontName, "-", " ")
-
+		fmt.Printf("newFN: %s\n", newFN)
 		return newFN 
 	} else {
 		fmt.Println("Problem. Check it out!")
