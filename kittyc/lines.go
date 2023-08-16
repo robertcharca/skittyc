@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func WritingAtLine(section string, addedLine string) {
+func WritingAtLine(section string, addedLines []string) {
 	file, err := os.OpenFile(path, os.O_RDWR, 0644)			
 	if err != nil {
 		fmt.Println(err.Error())
@@ -19,15 +19,19 @@ func WritingAtLine(section string, addedLine string) {
 	scanner := bufio.NewScanner(file)		
 	
 	var lines []string	
+	var newLines []string
 
 	for scanner.Scan() {
 		line := scanner.Text()
 
 		lines = append(lines, line)	
 		
-		if strings.Contains(line, section) {		
-			newLine := addedLine 
-			lines = append(lines, newLine)
+		if strings.Contains(line, section) {	
+			for _, val := range addedLines {
+				newLines = append(newLines, val)
+			} 
+
+			lines = append(lines, newLines...)
 		}	
 	}
 
@@ -133,8 +137,63 @@ func ModifyingAtLine (oldLine, newLine string) bool {
 
 	fmt.Println("Value updated")
 	return true
-} 
+}
 
-func WritingMultipleLines(section string, addedLines []string) {
-	//
+func ModifyMultipleLines(oldLine string, newLines []string) bool {
+	file, err := os.OpenFile(path, os.O_RDWR, 0644)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	lines := make([]string, 0)
+	foundLine := false
+
+	counter := 0
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		modifiedLine := line
+		if strings.Contains(line, oldLine) {
+			modifiedLine = newLines[counter] 
+			foundLine = true
+			counter++
+		}	
+		
+		lines = append(lines, modifiedLine)
+	}
+
+	if !foundLine {
+		fmt.Println("Value not found in the file")
+		return false
+	}
+
+	if err := file.Truncate(0); err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+
+	if _, err := file.Seek(0, io.SeekStart); err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+
+	writer := bufio.NewWriter(file)
+	for _, line := range lines {
+		_, err := writer.WriteString(line + "\n")
+		if err != nil {
+			fmt.Println(err.Error())
+			return false
+		}
+	}
+
+	if err := writer.Flush(); err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+
+	fmt.Println("Values updated")
+	return true
 }

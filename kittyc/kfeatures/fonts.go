@@ -92,10 +92,10 @@ func SetFontComparing(font string) {
 func SetNewFont(font string) error {
 	fontAttribute := "font_family"
 
-	fontValue := fontAttribute + " " + font
+	fontValue := []string{fontAttribute + " " + font}
 	
 	if font != "" {
-		if !kittyc.ModifyingAtLine(fontAttribute, fontValue) {
+		if !kittyc.ModifyingAtLine(fontAttribute, fontValue[0]) {
 			kittyc.WritingAtLine("# Fonts", fontValue)
 		}
 

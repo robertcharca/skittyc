@@ -1,8 +1,11 @@
 package kittyc
 
 import (
+	"bufio"
 	"errors"
+	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -38,6 +41,34 @@ func ConvertStringToList(s string) []string {
 	}
 
 	return sList
+}
+
+func GettingMultipleValues(path string, keyword string) ([]string, error) {
+	file, err := os.OpenFile(path, os.O_RDWR, 0644)			
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)		
+	
+	var lines []string
+
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		if strings.HasPrefix(line, keyword) {
+			lines = append(lines, line)
+		}
+	}
+
+	scanningFile := scanner.Err()
+	if scanningFile != nil {
+		fmt.Println(scanningFile.Error())
+		return []string{}, scanningFile
+	}
+	return lines, nil 
 }
 
 // ListAllFonts: list all fonts through a command that gets all monospace fonts.
