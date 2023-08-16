@@ -81,17 +81,26 @@ func SetFontComparing(font string) {
 	if !fonts {
 		fmt.Println("Does this font exist?")
 	} else {
-		SetNewFont(cases.Title(language.English, cases.NoLower).String(entryFont))
+		err := SetNewFont(cases.Title(language.English, cases.NoLower).String(entryFont))
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 		fmt.Println("Implemented font. Check it out")
 	}
 }
 
-func SetNewFont(font string) {
+func SetNewFont(font string) error {
 	fontAttribute := "font_family"
 
 	fontValue := fontAttribute + " " + font
 	
-	if !kittyc.ModifyingAtLine(fontAttribute, fontValue) {
-		kittyc.WritingAtLine("# Fonts", fontValue)
-	} 
+	if font != "" {
+		if !kittyc.ModifyingAtLine(fontAttribute, fontValue) {
+			kittyc.WritingAtLine("# Fonts", fontValue)
+		}
+
+		return nil
+	}
+
+	return empty 
 }

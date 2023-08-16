@@ -22,12 +22,17 @@ var colorCmd = &cobra.Command{
 		if setC == true {
 			prompt, res := prompts.HandleSetColor()
 			
-			if prompt != "color scheme" {
-				kfeatures.ChangingValues(prompt, res, "# Colors")
-			} else {
+			fmt.Printf("prompt: %s, res: %s\n", prompt, res)	
+			switch prompt {
+			case "color scheme":
 				handleColorPath(res)
-				fmt.Printf("prompt: %s, res: %s\n", prompt, res)	
-			}
+				fmt.Printf("prompt: %s, res: %s\n", prompt, res)
+			default:
+				err := kfeatures.ChangingValues(prompt, res, "# Colors")	
+				if err != nil {
+					fmt.Println(err.Error())
+				}
+			}	
 		}
 	},
 }
@@ -42,7 +47,9 @@ func handleColorPath(path string) {
 	resultPath := strings.HasPrefix(path, "/")
 
 	if !resultPath {
-		fmt.Println("It's a url")	
+		fmt.Println("It's a url")
+		p, d := kfeatures.DownloadColors(path)
+		fmt.Printf("Path: %s, Downloaded? %t\n", p, d)
 	} else {
 		fmt.Println("It's a file path")
 	}

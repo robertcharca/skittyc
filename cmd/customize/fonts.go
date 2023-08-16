@@ -1,6 +1,8 @@
 package customize
 
 import (
+	"fmt"
+
 	"github.com/robertcharca/skittyc/kittyc/kfeatures"
 	"github.com/robertcharca/skittyc/prompts"
 	"github.com/spf13/cobra"
@@ -29,7 +31,10 @@ var fontCmd = &cobra.Command{
 				unknownFont, download := prompts.ConfirmFontExistence(res)
 				
 				if unknownFont == false && download == false {	
-					kfeatures.SetNewFont(res)
+					err := kfeatures.SetNewFont(res)
+					if err != nil {
+						fmt.Println(err.Error())
+					}
 				} else if unknownFont == true && download == true{	
 					font := kfeatures.DownloadNewFont(res)
 					kfeatures.SetFontComparing(font)
@@ -38,7 +43,10 @@ var fontCmd = &cobra.Command{
 				font := kfeatures.DownloadNewFont(res)	
 				kfeatures.SetFontComparing(font)
 			case "select from system":
-				kfeatures.SetNewFont(res)
+				err := kfeatures.SetNewFont(res)
+				if err != nil {
+					fmt.Println(err.Error())
+				}
 			}
 		}			
 	},
