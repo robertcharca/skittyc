@@ -27,8 +27,15 @@ func ChangingValues(attribute, value , section string) error {
 }
 
 func ChangingMultipleValues(attribute, values []string, section string) error {
-	if attribute != nil && values != nil && section != "" {	
-		if !kittyc.ModifyMultipleLines(attribute, values) {
+	if attribute != nil && values != nil && section != "" {
+		var chAttribute []string
+
+		for _, attr := range attribute {
+			change := strings.ReplaceAll(attr, " ", "_")
+			chAttribute = append(chAttribute, change)
+		}
+
+		if !kittyc.ModifyMultipleLines(chAttribute, values) {
 			kittyc.WritingAtLine(section, values)
 		}
 
