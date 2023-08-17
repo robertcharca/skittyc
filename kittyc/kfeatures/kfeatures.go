@@ -26,11 +26,9 @@ func ChangingValues(attribute, value , section string) error {
 	return empty
 }
 
-func ChangingMultipleValues(attribute string, values []string, section string) error {
-	if attribute != "" && values != nil && section != "" {
-		chAttribute := strings.ReplaceAll(attribute, " ", "_")
-
-		if !kittyc.ModifyMultipleLines(chAttribute, values) {
+func ChangingMultipleValues(attribute, values []string, section string) error {
+	if attribute != nil && values != nil && section != "" {	
+		if !kittyc.ModifyMultipleLines(attribute, values) {
 			kittyc.WritingAtLine(section, values)
 		}
 

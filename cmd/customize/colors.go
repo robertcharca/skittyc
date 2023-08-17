@@ -46,10 +46,9 @@ func handleColorPath(path string) {
 	resultPath := strings.HasPrefix(path, "/")
 
 	if !resultPath {
-		fmt.Println("It's a url")	
 		colors := kfeatures.DownloadColors(path)
 		kfeatures.SetColors(colors)	
 	} else {
-		fmt.Println("It's a file path")
+		kfeatures.SetColors(path)	
 	}
 }

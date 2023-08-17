@@ -83,7 +83,7 @@ func ModifyingAtLine (oldLine, newLine string) bool {
 
 	defer file.Close()
 	
-	scanner := bufio.NewScanner(file)		
+	scanner := bufio.NewScanner(file)
 	lines := make([]string, 0)
 	foundLine := false	
 
@@ -139,7 +139,7 @@ func ModifyingAtLine (oldLine, newLine string) bool {
 	return true
 }
 
-func ModifyMultipleLines(oldLine string, newLines []string) bool {
+func ModifyMultipleLines(oldLine , newLines []string) bool {
 	file, err := os.OpenFile(path, os.O_RDWR, 0644)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -156,14 +156,33 @@ func ModifyMultipleLines(oldLine string, newLines []string) bool {
 	for scanner.Scan() {
 		line := scanner.Text()
 		modifiedLine := line
-		if strings.Contains(line, oldLine) {
-			modifiedLine = newLines[counter] 
-			foundLine = true
-			counter++
-		}	
-		
+
+		if len(oldLine) == 1 {
+			if strings.Contains(line, oldLine[0]) {
+				if counter < len(newLines) {
+					modifiedLine = newLines[counter]
+					counter++
+				} else {
+					continue
+				}
+				
+				foundLine = true
+			}
+		}
+
+		if len(oldLine) > 1 {
+			if counter < len(newLines) {
+				if strings.Contains(line, oldLine[counter]) {	
+					modifiedLine = newLines[counter]
+					foundLine = true
+					counter++
+				}
+			}	
+		}
+
 		lines = append(lines, modifiedLine)
 	}
+	fmt.Println("counter ==> ", counter)
 
 	if !foundLine {
 		fmt.Println("Value not found in the file")
