@@ -90,10 +90,14 @@ func ModifyingAtLine (oldLine, newLine string) bool {
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		if strings.Contains(line, oldLine) {
-			line = newLine 
-			foundLine = true
-		}
+		possibleLines := strings.Fields(line)
+		for _, val := range possibleLines {
+			if val == oldLine {
+				line = newLine
+				foundLine = true
+			}
+		}	
+
 		lines = append(lines, line)
 	}
 

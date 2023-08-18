@@ -9,10 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	setC bool
-	changeC bool
-)
+var setC bool
 
 var colorCmd = &cobra.Command{
 	Use: "colors",
@@ -21,8 +18,7 @@ var colorCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if setC == true {
 			prompt, res := prompts.HandleSetColor()
-			
-			fmt.Printf("prompt: %s, res: %s\n", prompt, res)	
+	
 			switch prompt {
 			case "color scheme":
 				handleColorPath(res)	

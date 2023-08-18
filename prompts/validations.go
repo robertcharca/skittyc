@@ -31,11 +31,35 @@ var hexCodeValidation = &survey.Question{
 
 var numberZeroToOneValidator = &survey.Question{
 	Validate: func(number interface{}) error {
-		num, ok := number.(string)
-		numConv, _ := strconv.ParseFloat(num, 8)
-		if !ok || numConv < 0.0 || numConv > 1.0 {
+		num, _ := number.(string)
+		numConv, numOk := strconv.ParseFloat(num, 8)
+		if numOk != nil || numConv < 0.0 || numConv > 1.0 {
 			return errors.New("This number cannot be less than 0 or greater than 1.")
 		}	
+
+		return nil
+	},
+}
+
+var numberPositiveOnly = &survey.Question{
+	Validate: func(number interface{}) error {
+		num, _ := number.(string)	
+		numConv, okNum := strconv.ParseFloat(num, 8)
+		if okNum != nil || numConv > 99.99 {
+			return errors.New("This number cannot be less than 0")
+		}
+
+		return nil
+	},
+}
+
+var numberAllRanges = &survey.Question{
+	Validate: func(number interface{}) error {
+		num, _ := number.(string)
+		numConv, okNum := strconv.ParseFloat(num, 8)
+		if okNum != nil || numConv < -99.99 || numConv > 99.99 {
+			return errors.New("This number cannot be less than -99.99 and greater than 99.99")
+		}
 
 		return nil
 	},

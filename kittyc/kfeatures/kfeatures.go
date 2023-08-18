@@ -1,7 +1,7 @@
 package kfeatures
 
 import (
-	"errors"
+	"errors"	
 	"strings"
 
 	"github.com/robertcharca/skittyc/kittyc"
@@ -14,10 +14,10 @@ func ChangingValues(attribute, value , section string) error {
 		chAttribute := strings.ReplaceAll(attribute, " ", "_")
 
 		var chValue []string
-		chValue = []string{chAttribute + " " + value}	
+		chValue = []string{chAttribute + " " + value}
 
 		if !kittyc.ModifyingAtLine(chAttribute, chValue[0]) {
-			kittyc.WritingAtLine(section, chValue)
+			kittyc.WritingAtLine(section, chValue)	
 		}
 
 		return nil
