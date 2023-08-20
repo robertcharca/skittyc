@@ -29,6 +29,7 @@ var cursorChangeQuestion = []*survey.Question{
 
 func HandleSetCursor() (string, string) {
 	answers := struct{ Option string `survey:"setCursor"`}{}
+	
 	err := survey.Ask(cursorSetQuestion, &answers)
 	if err != nil {
 		log.Fatalln(err)
@@ -45,27 +46,19 @@ func HandleSetCursor() (string, string) {
 		Options: []string{"block", "beam", "underline"},
 	}
 
-	if answers.Option != "cursor shape" {
-		csInput := survey.AskOne(cursorSetColor, &existingCursor, survey.WithValidator(hexCodeValidation.Validate))
-		if csInput != nil {
-			log.Fatalln(csInput)
-			return "", ""
-		}
-
-		return answers.Option, existingCursor
-	}
-
-	csInputSelect := survey.AskOne(cursorSelectType, &existingCursor)
-	if csInputSelect != nil {
-		log.Fatalln(csInputSelect)
-		return "", ""
-	}
+	switch answers.Option {
+	case "cursor shape":
+		survey.AskOne(cursorSelectType, &existingCursor)
+	default:
+		survey.AskOne(cursorSetColor, &existingCursor, survey.WithValidator(hexCodeValidation.Validate))
+	}	
 
 	return answers.Option, existingCursor
 }
 
 func HandleChangeCursor() (string, string) {
 	answers := struct{ Option string `survey:"changeCursor"`}{}
+	
 	err := survey.Ask(cursorChangeQuestion, &answers)
 	if err != nil {
 		log.Fatalln(err)
@@ -81,20 +74,11 @@ func HandleChangeCursor() (string, string) {
 		Message: answers.Option,
 	}
 
-	if answers.Option != "cursor blink interval" {
-		csInput := survey.AskOne(cursorInputNumber, &existingCursor, survey.WithValidator(numberPositiveOnly.Validate))
-		if csInput != nil {
-			log.Fatalln(csInput)
-			return "", ""
-		}
-
-		return answers.Option, existingCursor
-	}
-
-	csInputRange := survey.AskOne(cursorInputNumberRange, &existingCursor, survey.WithValidator(numberAllRanges.Validate))
-	if csInputRange != nil {
-		log.Fatalln(csInputRange)
-		return "", ""
+	switch answers.Option{
+	case "cursor blink interval":
+		survey.AskOne(cursorInputNumberRange, &existingCursor, survey.WithValidator(numberAllRanges.Validate))
+	default:
+		survey.AskOne(cursorInputNumber, &existingCursor, survey.WithValidator(numberPositiveOnly.Validate))
 	}
 
 	return answers.Option, existingCursor

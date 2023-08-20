@@ -7,6 +7,16 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"	
 )
+var backforeSetNewQuestion = []*survey.Question{
+	{
+		Name: "setBackfore",
+		Prompt: &survey.Select{
+			Message: "What would you like to set?",
+			Options: []string{"background", "foreground", "background image", 
+				"selection background", "selection foreground"},	
+		},
+	},
+}
 
 var backforeChangeQuestion = []*survey.Question{
 	{
@@ -15,17 +25,6 @@ var backforeChangeQuestion = []*survey.Question{
 			Message: "Choose an option: ",
 			Options: []string{"background tint", "background opacity", "background image layout"},
 			Help: "helping",
-		},
-	},
-}
-
-var backforeSetNewQuestion = []*survey.Question{
-	{
-		Name: "setBackfore",
-		Prompt: &survey.Select{
-			Message: "What would you like to set?",
-			Options: []string{"background", "foreground", "background image", 
-				"selection background", "selection foreground"},	
 		},
 	},
 }

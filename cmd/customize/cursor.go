@@ -17,13 +17,18 @@ var cursorCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if setCur == true {
 			prompt, res := prompts.HandleSetCursor()
-			kfeatures.ChangingValues(prompt, res, "# Cursor")
-			fmt.Printf("prompt: %s, res: %s\n", prompt, res)
+			err := kfeatures.ChangingValues(prompt, res, "# Cursor")
+			if err != nil {
+				fmt.Println(err.Error())
+			}
 		}
 
 		if changeCur == true {
 			prompt, res := prompts.HandleChangeCursor()
-			kfeatures.ChangingValues(prompt, res, "# Cursor")
+			err := kfeatures.ChangingValues(prompt, res, "# Cursor")
+			if err != nil {
+				fmt.Println(err.Error())
+			}
 		}
 	},
 }

@@ -6,10 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	setBF bool
-	changeBF bool
-)
+var setBF, changeBF bool
 
 var backforeCmd = &cobra.Command{
 	Use: "backfore",

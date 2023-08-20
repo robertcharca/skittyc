@@ -8,10 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (	
-	setF bool	
-	changeF bool
-)
+var setF, changeF bool
 
 var fontCmd = &cobra.Command{
 	Use: "fonts",

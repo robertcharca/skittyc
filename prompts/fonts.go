@@ -8,6 +8,16 @@ import (
 	"github.com/robertcharca/skittyc/kittyc"
 )
 
+var fontSetNewQuestion = []*survey.Question{
+	{
+		Name: "setNewFont",
+		Prompt: &survey.Select{
+			Message: "How would you like to set your new font?",
+			Options: []string{"automatic", "url", "select from system"},	
+		},
+	},
+}
+
 var fontChangeQuestion = []*survey.Question{
 	{
 		Name: "changeFont",
@@ -15,16 +25,6 @@ var fontChangeQuestion = []*survey.Question{
 			Message: "Choose an option: ",
 			Options: []string{"font size", "bold font", "italic font", "bold italic font"},
 			Help: "helping",
-		},
-	},
-}
-
-var fontSetNewQuestion = []*survey.Question{
-	{
-		Name: "setNewFont",
-		Prompt: &survey.Select{
-			Message: "How would you like to set your new font?",
-			Options: []string{"automatic", "url", "select from system"},	
 		},
 	},
 }
