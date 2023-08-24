@@ -2,7 +2,9 @@ package prompts
 
 import (
 	"errors"
+	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/robertcharca/skittyc/kittyc"
@@ -62,5 +64,30 @@ var numberAllRanges = &survey.Question{
 		}
 
 		return nil
+	},
+}
+
+var multiplePositiveNumbers = &survey.Question{
+	Validate: func(number interface{}) error {
+		num, _ := number.(string)
+		spaces := regexp.MustCompile(`\s`).MatchString(num)
+		 
+		if !spaces {
+			numConv, okNum := strconv.ParseFloat(num, 8)
+			if okNum != nil || numConv < -99.99 || numConv > 99.99 {
+				return errors.New("This number cannot be less than -99.99 and greater than 99.99")
+			}
+		}
+
+		listNums := strings.Fields(num)
+
+		for ln := 0; ln < len(listNums); ln++ {	
+			numConv, okNum := strconv.ParseFloat(listNums[ln], 8)
+			if okNum != nil || numConv < -99.99 || numConv > 99.99 {
+				return errors.New("These numbers cannot be less than -99.99 and greater than 99.99")
+			}
+		}
+
+		return nil 
 	},
 }

@@ -39,10 +39,7 @@ func HandleSetBackfore() (string, string) {
 	}
 
 	var existingBackfore string
-
-	backforeSetColor := &survey.Input{
-		Message: answers.Option,	 
-	}
+	var backforeValue string	
 
 	backforeSetImage := &survey.Input{
 		Message: "Type your png image path: ",
@@ -52,23 +49,16 @@ func HandleSetBackfore() (string, string) {
 		},
 	}	
 
-	if answers.Option != "background image" {
-		bfInput := survey.AskOne(backforeSetColor, &existingBackfore, survey.WithValidator(hexCodeValidation.Validate), survey.WithValidator(survey.MaxLength(7)))
-		if bfInput != nil {
-			log.Fatalln(bfInput)
-			return " ", " "
-		}
+	switch answers.Option {
+	case "background image":	
+		survey.AskOne(backforeSetImage, &existingBackfore)	
 
 		return answers.Option, existingBackfore
-	}
-
-	bfInputImage := survey.AskOne(backforeSetImage, &existingBackfore)
-	if bfInputImage != nil {
-		log.Fatalln(bfInputImage)
-		return " ", " "
-	}
+	default:
+		backforeValue = inputSurvey(answers.Option, hexCodeValidation.Validate)
+	}	
 	
-	return answers.Option, existingBackfore
+	return answers.Option, backforeValue 
 }
 
 func HandleChangeBackfore() (string, string) {	
@@ -77,33 +67,15 @@ func HandleChangeBackfore() (string, string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	var existingBackfore string
-
-	backforeChangeBackground := &survey.Input{
-		Message: answers.Option,
-	}
-
-	backforeChangeImage := &survey.Select{
-		Message: "Select your image layout: ",
-		Options: []string{"tiled", "mirror-tiled", "scaled", "clamped", "centered", "cscaled"},
-	}
-
-	if answers.Option != "background image layout" {
-		bfInput := survey.AskOne(backforeChangeBackground, &existingBackfore, survey.WithValidator(numberZeroToOneValidator.Validate))
-		if bfInput != nil {
-			log.Fatalln(bfInput)
-			return " ", " "
-		}
-
-		return answers.Option, existingBackfore
-	}
-
-	bfInputImage := survey.AskOne(backforeChangeImage, &existingBackfore)
-	if bfInputImage != nil {
-		log.Fatalln(bfInputImage)
-		return "", ""
-	}
 	
-	return answers.Option, existingBackfore
+	var backforeValue string	
+
+	switch answers.Option {
+	case "background image layout":
+		backforeValue = selectSurveyOptions("Select your image layout: ", []string{"tiled", "mirror-tiled", "scaled", "clamped", "centered", "cscaled"})
+	default:
+		backforeValue = inputSurvey(answers.Option, numberZeroToOneValidator.Validate)
+	}	
+	
+	return answers.Option, backforeValue 
 }

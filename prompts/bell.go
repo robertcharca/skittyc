@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/AlecAivazis/survey/v2"
 )
@@ -35,35 +36,21 @@ func HandleSetBell() (string, string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	var existingBell string
-
-	bellConfirmationSelect := &survey.Select{
-		Message: "Select your confirmation: ",
-		Options: []string{"yes", "no"},
-	}
-
-	bellColorSelect := &survey.Select{
-		Message: "Select your option: ",
-		Options: []string{"hex color", "none"},
-	}
-
-	bellColorInput := &survey.Input{
-		Message: answers.Option,
-	}
+	
+	var bellValue string	
 
 	switch answers.Option {
 	case "visual bell color":
-		survey.AskOne(bellColorSelect, &existingBell)
+		bellValue = selectSurveyOptions("Select your option: ", []string{"hex color", "none"})	
 
-		if existingBell != "none" {
-			survey.AskOne(bellColorInput, &existingBell, survey.WithValidator(hexCodeValidation.Validate)) 
+		if bellValue != "none" {
+			bellValue = inputSurvey(answers.Option, hexCodeValidation.Validate) 
 		}	
 	default:
-		survey.AskOne(bellConfirmationSelect, &existingBell)
+		bellValue = selectSurveyOptions("Select your confirmation: ", []string{"yes", "no"})	
 	}  
 	
-	return answers.Option, existingBell
+	return answers.Option, bellValue 
 }
 
 func HandleChangeBell() (string, string) {
@@ -74,8 +61,8 @@ func HandleChangeBell() (string, string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	var existingBell string
+	
+	var bellValue string
 
 	bellPathInput := &survey.Input{
 		Message: "Paste a file path for your bell song:",
@@ -89,34 +76,24 @@ func HandleChangeBell() (string, string) {
 
 			return filteredFiles
 		},
-	}
-
-	bellDurationInput := &survey.Input{
-		Message: answers.Option,
-	}
-
-	bellConfirmationSelect := &survey.Select{
-		Message: "Select your confirmation: ",
-		Options: []string{"yes", "no", "custom"},
-	}
-
-	bellOnTabInput := &survey.Input{
-		Message: "Type a word or an emoji:",
-	}
+	}	
 	
 	switch answers.Option{
 	case "bell path":
-		survey.AskOne(bellPathInput, &existingBell, survey.WithValidator(survey.MinLength(6))) 
+		survey.AskOne(bellPathInput, &bellValue, survey.WithValidator(survey.MinLength(6))) 
 	case "visual bell duration":	
-		survey.AskOne(bellDurationInput, &existingBell, survey.WithValidator(numberPositiveOnly.Validate)) 
+		bellValue = inputSurvey(answers.Option, numberPositiveOnly.Validate) 
 	default:
-		survey.AskOne(bellConfirmationSelect, &existingBell)
+		bellValue = selectSurveyOptions("Select your confirmation: ", []string{"yes", "no", "custom"})	
 
-		if existingBell == "custom" {
-			survey.AskOne(bellOnTabInput, &existingBell)
-			return answers.Option, `"` + existingBell + ` "`
+		if bellValue == "custom" {
+			bellValue = inputSurvey("Type a word or an emoji: ", survey.MinLength(1))
+			
+			if verify := regexp.MustCompile(`\s`).MatchString(bellValue); verify {
+				return answers.Option, `"` + bellValue + `"`
+			}
 		}
 	}
 
-	return answers.Option, existingBell
+	return answers.Option, bellValue 
 }

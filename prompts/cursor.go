@@ -35,25 +35,16 @@ func HandleSetCursor() (string, string) {
 		log.Fatalln(err)
 	}
 
-	var existingCursor string
-
-	cursorSetColor := &survey.Input{
-		Message: answers.Option,
-	}
-
-	cursorSelectType := &survey.Select{
-		Message: "Select your cursor shape: ",
-		Options: []string{"block", "beam", "underline"},
-	}
+	var cursorValue string	
 
 	switch answers.Option {
 	case "cursor shape":
-		survey.AskOne(cursorSelectType, &existingCursor)
+		cursorValue = selectSurveyOptions("Select your cursor shape: ", []string{"block", "beam", "underline"})	
 	default:
-		survey.AskOne(cursorSetColor, &existingCursor, survey.WithValidator(hexCodeValidation.Validate))
+		cursorValue = inputSurvey(answers.Option, hexCodeValidation.Validate)	
 	}	
 
-	return answers.Option, existingCursor
+	return answers.Option, cursorValue 
 }
 
 func HandleChangeCursor() (string, string) {
@@ -63,23 +54,15 @@ func HandleChangeCursor() (string, string) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	var existingCursor string
-
-	cursorInputNumber := &survey.Input{
-		Message: answers.Option,
-	}
-
-	cursorInputNumberRange := &survey.Input{
-		Message: answers.Option,
-	}
+	
+	var cursorValue string	
 
 	switch answers.Option{
 	case "cursor blink interval":
-		survey.AskOne(cursorInputNumberRange, &existingCursor, survey.WithValidator(numberAllRanges.Validate))
-	default:
-		survey.AskOne(cursorInputNumber, &existingCursor, survey.WithValidator(numberPositiveOnly.Validate))
+		cursorValue = inputSurvey(answers.Option, numberAllRanges.Validate)	
+	default:	
+		cursorValue = inputSurvey(answers.Option, numberPositiveOnly.Validate)
 	}
 
-	return answers.Option, existingCursor
+	return answers.Option, cursorValue 
 }

@@ -1,6 +1,8 @@
 package customize
 
 import (
+	"fmt"
+
 	"github.com/robertcharca/skittyc/kittyc/kfeatures"
 	"github.com/robertcharca/skittyc/prompts"
 	"github.com/spf13/cobra"
@@ -15,12 +17,20 @@ var backforeCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if changeBF == true {
 			prompt, res := prompts.HandleChangeBackfore()
-			kfeatures.ChangingValues(prompt, res, "# Background and Foreground")
+			
+			err := kfeatures.ChangingValues(prompt, res, "# Background and Foreground")
+			if err != nil {
+				fmt.Println(err.Error())
+			} 
 		}
 
 		if setBF == true {
 			prompt, res := prompts.HandleSetBackfore()
-			kfeatures.ChangingValues(prompt, res, "# Background and Foreground")
+			
+			err := kfeatures.ChangingValues(prompt, res, "# Background and Foreground")
+			if err != nil {
+				fmt.Println(err.Error())
+			} 
 		}
 	},
 }
