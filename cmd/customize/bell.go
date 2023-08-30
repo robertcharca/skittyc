@@ -15,7 +15,7 @@ var bellCmd = &cobra.Command{
 	Short: "'bell' subcommand",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		if setB == true {
+		if setB {
 			prompt, res := prompts.HandleSetBell()
 			err := kfeatures.ChangingValues(prompt, res, "# Terminal bell")
 			if err != nil {
@@ -23,7 +23,7 @@ var bellCmd = &cobra.Command{
 			}	
 		}
 
-		if changeB == true {
+		if changeB {
 			prompt, res := prompts.HandleChangeBell()	
 			err := kfeatures.ChangingValues(prompt, res, "# Terminal bell")
 			if err != nil {

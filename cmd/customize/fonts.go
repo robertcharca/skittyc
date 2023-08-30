@@ -15,12 +15,12 @@ var fontCmd = &cobra.Command{
 	Short: "'fonts' subcommand",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		if changeF == true {
+		if changeF {
 			prompt, res := prompts.HandleFontChangeValues()	
 			kfeatures.ChangingValues(prompt, res, "# Fonts")
 		}
 
-		if setF == true {
+		if setF {
 			promt, res := prompts.HandleNewFont()		
 
 			switch promt {

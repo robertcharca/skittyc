@@ -15,7 +15,7 @@ var backforeCmd = &cobra.Command{
 	Short: "'background' and 'foreground'subcommand",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		if changeBF == true {
+		if changeBF {
 			prompt, res := prompts.HandleChangeBackfore()
 			
 			err := kfeatures.ChangingValues(prompt, res, "# Background and Foreground")
@@ -24,7 +24,7 @@ var backforeCmd = &cobra.Command{
 			} 
 		}
 
-		if setBF == true {
+		if setBF {
 			prompt, res := prompts.HandleSetBackfore()
 			
 			err := kfeatures.ChangingValues(prompt, res, "# Background and Foreground")

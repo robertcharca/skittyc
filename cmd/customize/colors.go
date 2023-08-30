@@ -16,7 +16,7 @@ var colorCmd = &cobra.Command{
 	Short: "'colors' subcommand",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		if setC == true {
+		if setC {
 			prompt, res := prompts.HandleSetColor()
 	
 			switch prompt {

@@ -55,6 +55,18 @@ var numberPositiveOnly = &survey.Question{
 	},
 }
 
+var numberPositiveLarge = &survey.Question{
+	Validate: func(number interface{}) error {
+		num, _ := number.(string)	
+		numConv, okNum := strconv.ParseFloat(num, 8)
+		if okNum != nil || numConv < 0.0 {
+			return errors.New("This number cannot be less than 0")
+		}
+
+		return nil
+	},
+}
+
 var numberAllRanges = &survey.Question{
 	Validate: func(number interface{}) error {
 		num, _ := number.(string)

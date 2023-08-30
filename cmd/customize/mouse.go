@@ -15,7 +15,7 @@ var mouseCmd = &cobra.Command{
 	Short: "'mouse' subcommand",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		if setM == true { 
+		if setM { 
 			prompt, res := prompts.HandleSetMouse()
 			
 			err := kfeatures.ChangingValues(prompt, res, "# Mouse")
@@ -24,7 +24,7 @@ var mouseCmd = &cobra.Command{
 			}	
 		}
 
-		if changeM == true { 
+		if changeM { 
 			prompt, res := prompts.HandleChangeMouse()
 			err := kfeatures.ChangingValues(prompt, res, "# Mouse")
 			if err != nil {

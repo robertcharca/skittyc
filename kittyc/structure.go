@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-var fileStructureTitle = []string{"# Fonts", "# Background and Foreground", "# Cursor", "# Scrollback", 
-	"# Colors", "# Mouse", "# Tab bar", "# Terminal bell", "# Windows layout"}
+var fileStructureTitle = []string{"# Fonts", "# Background and Foreground", "# Cursor", 
+	"# Colors", "# Mouse", "# Tab bar", "# Terminal bell", "# Window layout"}
 
 func DisplayStructure (file *os.File) {
 	for _, values := range fileStructureTitle {

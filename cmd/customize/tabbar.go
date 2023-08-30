@@ -15,7 +15,7 @@ var tabBarCmd = &cobra.Command{
 	Short: "'tabbar' subcommand",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		if setTB == true {
+		if setTB {
 			prompt, res := prompts.HandleSetTabBar()
 			
 			err := kfeatures.ChangingValues(prompt, res, "# Tab bar")
@@ -24,7 +24,7 @@ var tabBarCmd = &cobra.Command{
 			}	
 		}
 
-		if changeTB == true {
+		if changeTB {
 			prompt, res := prompts.HandleChangeTabBar()
 
 			err := kfeatures.ChangingValues(prompt, res, "# Tab bar")
