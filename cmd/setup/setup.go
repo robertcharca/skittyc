@@ -2,7 +2,9 @@ package setup
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/robertcharca/skittyc/kittyc/kfeatures"
 	"github.com/spf13/cobra"
 )
 
@@ -17,4 +19,18 @@ var SetupCmd = &cobra.Command{
 
 func init() {
 	//Funcionality for the 'setup' command.
+}
+
+func handleSetupDownloads(path string) string {
+	var newPath string
+
+	resultPath := strings.HasPrefix(path, "/")
+
+	if !resultPath {
+		newPath = kfeatures.DownloadKittyFiles(path, ".conf")		
+	} else {
+		newPath = path
+	}
+
+	return newPath
 }

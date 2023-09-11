@@ -42,7 +42,7 @@ func handleColorPath(path string) {
 	resultPath := strings.HasPrefix(path, "/")
 
 	if !resultPath {
-		colors := kfeatures.DownloadColors(path)
+		colors := kfeatures.DownloadKittyFiles(path, ".conf")
 		kfeatures.SetColors(colors)	
 	} else {
 		kfeatures.SetColors(path)	

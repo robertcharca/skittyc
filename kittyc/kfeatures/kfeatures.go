@@ -44,3 +44,19 @@ func ChangingMultipleValues(attribute, values []string, section string) error {
 
 	return empty
 }
+
+func DownloadKittyFiles(link, fileFormat string) string {
+	kittyDownload := kittyc.UrlDownload{
+		Link: link,
+		Format: ".conf",
+		DownloadPath: "/Downloads/",
+	}
+	
+	file, downloaded, path := kittyc.DownloadFile(kittyDownload)
+
+	if !downloaded {
+		return ""
+	}
+
+	return path + file
+}
