@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/robertcharca/skittyc/kittyc"
 	"github.com/robertcharca/skittyc/kittyc/kfeatures"
 	"github.com/robertcharca/skittyc/prompts"
 	"github.com/spf13/cobra"
@@ -31,26 +32,29 @@ func init() {
 }
 
 func handleKittyConfTheme(path string) {
-	option, exists := prompts.ConfirmKittyConfExistence()
-	fmt.Printf("option: %s, exists: %t\n", option, exists)	
+	option, exists := prompts.ConfirmKittyConfExistence()	
 
 	if !exists{
-		// Function to create an empty file and replace it with the theme.
-		// Return a boolean value.
+		kittyc.CreateKittyConf()
+		filePath := handleSetupDownloads(path)
+		if err := kfeatures.ReplacingKittyFile(filePath); err != nil {	
+			log.Fatalln(err)
+		}
 	}
 
 	switch option {
-	case "save it as a profile":
-		// Function to create a new kitty conf file that will have the theme.
+	case "save it as a profile":	
+		profileName := prompts.ProfileNameInput()
+		filePath := handleSetupDownloads(path)
+		if err := kfeatures.SavingKittyFileProfile(filePath, profileName); err != nil {
+			log.Fatalln(err)
+		} 
 	case "replace it":
 		filePath := handleSetupDownloads(path)
-		err := kfeatures.ReplacingKittyFile(filePath)
-		if err != nil {
+		if err := kfeatures.ReplacingKittyFile(filePath); err != nil {	
 			log.Fatalln(err)
-		}
+		}	
 	default:
-		// Function for quitting the theme implementation process. 
-	}
-	// Function to replace an existing file with the theme.
-	// Return a boolean value.
+		fmt.Println("Quitting...")
+	}	
 }

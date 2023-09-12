@@ -1,9 +1,9 @@
 package kfeatures
 
 import (
-	"bufio"
-	"fmt"
+	"bufio"	
 	"io"
+	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -28,7 +28,11 @@ var kittyHints = []KittyStructure{
 	{"# Other", []string{"wayland_", "macos_", "map", "kitty_", "scrollback", "include", "shell", "listen", "allow_remote_control"}},
 }
 
-func filteringKittyTheme(path string) []string {	
+var homePath, _ = os.UserHomeDir()
+var kittyPath = homePath + "/.config/kitty/kitty.conf"
+var kittyProfile = homePath + "/.config/kitty/profile/"
+
+func filteringKittyTheme(path string) ([]string, error) {	
 	sectionLines := make(map[string][]string)
 	var completeLines []string
 	var noEmptyList []string
@@ -36,8 +40,8 @@ func filteringKittyTheme(path string) []string {
 
 	// Getting lines that are not comments from the file
 	file, err := os.OpenFile(path, os.O_RDWR, 0644)			
-	if err != nil {
-		fmt.Println(err.Error())
+	if err != nil {	
+		return []string{}, err
 	}
 
 	defer file.Close()
@@ -96,46 +100,57 @@ func filteringKittyTheme(path string) []string {
 		}
 	}	
 
-	return noEmptyList 
+	return noEmptyList, nil 
 }
 
-func ReplacingKittyFile(path string) error {
-	homePath, _ := os.UserHomeDir()
-	kittyPath := homePath + "/.config/kitty/kitty.conf" 
-	
-	kittyThemeRepl := filteringKittyTheme(path)	
-
-	file, err := os.OpenFile(kittyPath, os.O_RDWR, 0644)
-	if err != nil {
-		fmt.Println(err.Error())
+func rewrittingKittyFile(path string, newValues []string) error {
+	file, err := os.OpenFile(path, os.O_RDWR, 0644)
+	if err != nil {	
 		return err
 	}
 
 	truncate := file.Truncate(0) 
-	if truncate != nil {
-		fmt.Println(err.Error())
+	if truncate != nil {	
 		return truncate
 	}
 
 	_, offsErr := file.Seek(0, io.SeekStart)
-	if offsErr != nil {
-		fmt.Println(err.Error())
+	if offsErr != nil {	
 		return offsErr
 	}
 	
 	writer := bufio.NewWriter(file)	
 
-	for i := 0; i < len(kittyThemeRepl); i++ {
-		section := strings.HasPrefix(kittyThemeRepl[i], "#")
+	for i := 0; i < len(newValues); i++ {
+		section := strings.HasPrefix(newValues[i], "#")
 
-		if section && kittyThemeRepl[i] != "# Fonts" {
-			writer.WriteString("\n" + kittyThemeRepl[i] + "\n")
+		if section && newValues[i] != "# Fonts" {
+			if _, err := writer.WriteString("\n" + newValues[i] + "\n"); err != nil {
+				return err
+			}
 		} else {
-			writer.WriteString(kittyThemeRepl[i] + "\n")
+			if _, err := writer.WriteString(newValues[i] + "\n"); err != nil {
+				return err
+			}
 		} 
 	}
 
 	writer.Flush()
 	
 	return nil 
+}
+
+func ReplacingKittyFile(path string) error {	
+	kittyThemeRepl, err := filteringKittyTheme(path)
+	if err != nil {
+		log.Fatalln(err)
+		return err
+	}
+
+	if err := rewrittingKittyFile(kittyPath, kittyThemeRepl); err != nil {
+		log.Fatalln(err)
+		return err
+	}
+
+	return nil
 }
