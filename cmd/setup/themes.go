@@ -2,6 +2,7 @@ package setup
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/robertcharca/skittyc/kittyc/kfeatures"
 	"github.com/robertcharca/skittyc/prompts"
@@ -38,13 +39,15 @@ func handleKittyConfTheme(path string) {
 		// Return a boolean value.
 	}
 
-	kfeatures.ReplacingKittyFile(path)
-
 	switch option {
 	case "save it as a profile":
 		// Function to create a new kitty conf file that will have the theme.
 	case "replace it":
-		// Function to empty the kitty file and rewrite it with the theme.
+		filePath := handleSetupDownloads(path)
+		err := kfeatures.ReplacingKittyFile(filePath)
+		if err != nil {
+			log.Fatalln(err)
+		}
 	default:
 		// Function for quitting the theme implementation process. 
 	}

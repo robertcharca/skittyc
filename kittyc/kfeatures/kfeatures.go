@@ -48,7 +48,7 @@ func ChangingMultipleValues(attribute, values []string, section string) error {
 func DownloadKittyFiles(link, fileFormat string) string {
 	kittyDownload := kittyc.UrlDownload{
 		Link: link,
-		Format: ".conf",
+		Format: fileFormat,
 		DownloadPath: "/Downloads/",
 	}
 	

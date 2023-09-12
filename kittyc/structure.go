@@ -5,11 +5,11 @@ import (
 	"os"
 )
 
-var fileStructureTitle = []string{"# Fonts", "# Background and Foreground", "# Cursor", 
+var FileStructureTitle = []string{"# Fonts", "# Background and Foreground", "# Cursor", 
 	"# Colors", "# Mouse", "# Tab bar", "# Terminal bell", "# Window layout", "# Other"}
 
 func DisplayStructure (file *os.File) {
-	for _, values := range fileStructureTitle {
+	for _, values := range FileStructureTitle {
 		_, err := fmt.Fprintf(file, "%s \n\n", values) 
 
 		if err != nil {
