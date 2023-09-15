@@ -18,7 +18,7 @@ var themesCmd = &cobra.Command{
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		if setTheme {
-			res := prompts.HandleSetTheme()
+			res := prompts.InputSetTheme()
 			fmt.Printf("res: %s\n", res)
 
 			handleKittyConfTheme(res)
@@ -37,7 +37,7 @@ func handleKittyConfTheme(path string) {
 	if !exists{
 		kittyc.CreateKittyConf()
 		filePath := handleSetupDownloads(path)
-		if err := kfeatures.ReplacingKittyFile(filePath); err != nil {	
+		if err := kfeatures.ReplacingKittyConf(filePath); err != nil {	
 			log.Fatalln(err)
 		}
 	}
@@ -51,7 +51,7 @@ func handleKittyConfTheme(path string) {
 		} 
 	case "replace it":
 		filePath := handleSetupDownloads(path)
-		if err := kfeatures.ReplacingKittyFile(filePath); err != nil {	
+		if err := kfeatures.ReplacingKittyConf(filePath); err != nil {	
 			log.Fatalln(err)
 		}	
 	default:

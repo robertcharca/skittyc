@@ -7,6 +7,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"	
 )
+
 var backforeSetNewQuestion = []*survey.Question{
 	{
 		Name: "setBackfore",

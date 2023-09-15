@@ -30,7 +30,7 @@ var kittyHints = []KittyStructure{
 
 var homePath, _ = os.UserHomeDir()
 var kittyPath = homePath + "/.config/kitty/kitty.conf"
-var kittyProfile = homePath + "/.config/kitty/profile/"
+var kittyProfile = homePath + "/.config/kitty/profiles/"
 
 func filteringKittyTheme(path string) ([]string, error) {	
 	sectionLines := make(map[string][]string)
@@ -140,7 +140,7 @@ func rewrittingKittyFile(path string, newValues []string) error {
 	return nil 
 }
 
-func ReplacingKittyFile(path string) error {	
+func ReplacingKittyConf(path string) error {	
 	kittyThemeRepl, err := filteringKittyTheme(path)
 	if err != nil {
 		log.Fatalln(err)
