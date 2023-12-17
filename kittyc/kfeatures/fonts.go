@@ -1,7 +1,7 @@
 package kfeatures
 
 import (
-	"fmt"	
+	"fmt"
 	"strings"
 
 	"github.com/robertcharca/skittyc/kittyc"
@@ -15,21 +15,21 @@ func verifyFontDownload(font string) kittyc.UrlDownload {
 
 	firstUrl := "https://www.1001fonts.com/download/" + corrFont + ".zip"
 	secondUrl := "https://www.fontsquirrel.com/fonts/download/" + corrFont
-	
+
 	urlAlternatives := []kittyc.UrlDownload{
 		{
-			Link: firstUrl,
-			Format: ".zip",
+			Link:         firstUrl,
+			Format:       ".zip",
 			DownloadPath: "/.local/share/fonts/",
 		},
 		{
-			Link: secondUrl,
-			Format: ".zip",
+			Link:         secondUrl,
+			Format:       ".zip",
 			DownloadPath: "/.local/share/fonts/",
 		},
 		{
-			Link: font,
-			Format: ".zip",
+			Link:         font,
+			Format:       ".zip",
 			DownloadPath: "/.local/share/fonts/",
 		},
 	}
@@ -40,7 +40,7 @@ func verifyFontDownload(font string) kittyc.UrlDownload {
 		if status {
 			return alts
 		}
-	}	
+	}
 
 	return kittyc.UrlDownload{}
 }
@@ -48,8 +48,8 @@ func verifyFontDownload(font string) kittyc.UrlDownload {
 func DownloadNewFont(font string) string {
 	var fontName string
 
-	fontDownloadUrl := verifyFontDownload(font)	
-	file, downloaded, path := kittyc.DownloadFile(fontDownloadUrl) 
+	fontDownloadUrl := verifyFontDownload(font)
+	file, downloaded, path := kittyc.DownloadFile(fontDownloadUrl)
 
 	if downloaded {
 		kittyc.UnzipFile(path, file)
@@ -57,7 +57,7 @@ func DownloadNewFont(font string) string {
 		fontName = strings.ReplaceAll(file, ".zip", "")
 		newFN := strings.ReplaceAll(fontName, "-", " ")
 		fmt.Printf("newFN: %s\n", newFN)
-		return newFN 
+		return newFN
 	} else {
 		fmt.Println("Problem. Check it out!")
 	}
@@ -69,12 +69,12 @@ func SetFontComparing(font string) {
 	var lowerFonts []string
 
 	entryFont := strings.ToLower(font)
-	editedFonts := kittyc.ListAllFonts()	
+	editedFonts := kittyc.ListAllFonts()
 
-	for _, v := range(editedFonts) {
+	for _, v := range editedFonts {
 		lower := strings.ToLower(v)
 		lowerFonts = append(lowerFonts, lower)
-	}	
+	}
 
 	fonts, _ := kittyc.SearchingSimilarValues(lowerFonts, entryFont)
 
@@ -93,7 +93,7 @@ func SetNewFont(font string) error {
 	fontAttribute := "font_family"
 
 	fontValue := []string{fontAttribute + " " + font}
-	
+
 	if font != "" {
 		if !kittyc.ModifyingAtLine(fontAttribute, fontValue[0]) {
 			kittyc.WritingAtLine("# Fonts", fontValue)
@@ -102,5 +102,5 @@ func SetNewFont(font string) error {
 		return nil
 	}
 
-	return empty 
+	return errEmpty
 }

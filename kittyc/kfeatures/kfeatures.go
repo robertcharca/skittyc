@@ -1,29 +1,28 @@
 package kfeatures
 
 import (
-	"errors"	
+	"errors"
 	"strings"
 
 	"github.com/robertcharca/skittyc/kittyc"
 )
 
-var empty = errors.New("Empty values not allowed")
+var errEmpty = errors.New("empty values not allowed")
 
-func ChangingValues(attribute, value , section string) error {
+func ChangingValues(attribute, value, section string) error {
 	if attribute != "" && value != "" && section != "" {
 		chAttribute := strings.ReplaceAll(attribute, " ", "_")
 
-		var chValue []string
-		chValue = []string{chAttribute + " " + value}
+		chValue := []string{chAttribute + " " + value}
 
 		if !kittyc.ModifyingAtLine(chAttribute, chValue[0]) {
-			kittyc.WritingAtLine(section, chValue)	
+			kittyc.WritingAtLine(section, chValue)
 		}
 
 		return nil
 	}
 
-	return empty
+	return errEmpty
 }
 
 func ChangingMultipleValues(attribute, values []string, section string) error {
@@ -42,16 +41,16 @@ func ChangingMultipleValues(attribute, values []string, section string) error {
 		return nil
 	}
 
-	return empty
+	return errEmpty
 }
 
 func DownloadKittyFiles(link, fileFormat string) string {
 	kittyDownload := kittyc.UrlDownload{
-		Link: link,
-		Format: fileFormat,
+		Link:         link,
+		Format:       fileFormat,
 		DownloadPath: "/Downloads/",
 	}
-	
+
 	file, downloaded, path := kittyc.DownloadFile(kittyDownload)
 
 	if !downloaded {

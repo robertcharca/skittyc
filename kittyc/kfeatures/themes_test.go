@@ -1,6 +1,6 @@
 package kfeatures
 
-import (	
+import (
 	"testing"
 )
 
@@ -9,10 +9,10 @@ type kittyThemeFile struct {
 	fileName string
 }
 
-func TestReplacingKittyFile(t *testing.T) {	
+func TestReplacingKittyFile(t *testing.T) {
 	filePath1 := homePath + "/Downloads/tokyo-night-kitty.conf"
 
-	if err := ReplacingKittyFile(filePath1); err != nil {
+	if err := ReplacingKittyConf(filePath1); err != nil {
 		t.Errorf("Kitty theme is not replaced in kitty.conf file: %s", err)
-	} 
+	}
 }

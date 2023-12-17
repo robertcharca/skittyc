@@ -18,7 +18,7 @@ func SavingKittyFileProfile(path, customName string) error {
 
 	fileKittyProfile, err := EmptyKittyProfile(customName)
 	if err != nil {
-		return err 
+		return err
 	}
 
 	if err := rewrittingKittyFile(fileKittyProfile, kittyThemeRepl); err != nil {
@@ -30,24 +30,24 @@ func SavingKittyFileProfile(path, customName string) error {
 
 func EmptyKittyProfile(customName string) (string, error) {
 	newFileName := customName + ".conf"
-	reduceSpace := strings.ReplaceAll(newFileName, " ", "") 
-	emptyName := strings.HasPrefix(reduceSpace, "."); 
-	
+	reduceSpace := strings.ReplaceAll(newFileName, " ", "")
+	emptyName := strings.HasPrefix(reduceSpace, ".")
+
 	if emptyName {
-		return "", errors.New("A file with no name is not accepted")
+		return "", errors.New("a file with no name is not accepted")
 	}
 
-	emptyProfile := kittyProfile + reduceSpace 
+	emptyProfile := kittyProfile + reduceSpace
 
 	// Verifying if the "profile" directory exists. If not, then we create it
 	err := os.MkdirAll(kittyProfile, 0750)
-	if err != nil {	
+	if err != nil {
 		return "", err
 	}
 
 	// Creating a empty kitty file
 	file, err := os.Create(emptyProfile)
-	if err != nil {	
+	if err != nil {
 		return "", err
 	}
 

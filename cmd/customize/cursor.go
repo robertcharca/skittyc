@@ -8,14 +8,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var setCur, changeCur bool 
+var setCur, changeCur bool
 
 var cursorCmd = &cobra.Command{
-	Use: "cursor",
+	Use:   "cursor",
 	Short: "'cursor' subcommand",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		if setCur == true {
+		if setCur {
 			prompt, res := prompts.HandleSetCursor()
 			err := kfeatures.ChangingValues(prompt, res, "# Cursor")
 			if err != nil {
@@ -23,7 +23,7 @@ var cursorCmd = &cobra.Command{
 			}
 		}
 
-		if changeCur == true {
+		if changeCur {
 			prompt, res := prompts.HandleChangeCursor()
 			err := kfeatures.ChangingValues(prompt, res, "# Cursor")
 			if err != nil {
